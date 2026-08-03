@@ -239,11 +239,10 @@ if ($authStatus !== 'authenticated') {
             /* Zone 1: Left Action Dock (64px) */
             .studio-dock {
                 grid-area: dock;
-                background: var(--bg-glass);
-                backdrop-filter: blur(24px) saturate(1.8);
-                -webkit-backdrop-filter: blur(24px) saturate(1.8);
-                border-right: none;
-                box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+                background: transparent;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                border: none;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -252,33 +251,45 @@ if ($authStatus !== 'authenticated') {
                 z-index: 20;
             }
 
-
             .dock-logo {
-                font-size: 1.5rem;
-                font-weight: 800;
-                color: var(--accent-pink);
+                width: 42px;
+                height: 42px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 margin-bottom: 10px;
+            }
+
+            .dock-logo img {
+                width: 38px;
+                height: 38px;
+                border-radius: 12px;
+                object-fit: contain;
+                box-shadow: 0 4px 16px rgba(255, 0, 127, 0.35);
             }
 
             .dock-btn {
                 width: 44px;
                 height: 44px;
-                border-radius: 12px;
-                background: transparent;
-                border: 1px solid transparent;
+                border-radius: 14px;
+                background: rgba(255, 255, 255, 0.03);
+                backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.05);
                 color: var(--text-secondary);
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
-                transition: all 0.2s ease;
+                transition: all 0.25s ease;
                 outline: none;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
             }
 
             .dock-btn:hover, .dock-btn.active {
                 background: rgba(255, 0, 127, 0.2);
                 border-color: rgba(255, 0, 127, 0.4);
                 color: var(--accent-pink);
+                transform: translateY(-2px);
             }
 
             .dock-btn svg {
@@ -294,10 +305,10 @@ if ($authStatus !== 'authenticated') {
             /* Header Bar */
             .studio-header {
                 grid-area: header;
-                background: var(--bg-glass);
-                backdrop-filter: blur(24px) saturate(1.8);
-                -webkit-backdrop-filter: blur(24px) saturate(1.8);
-                border-bottom: none;
+                background: transparent;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                border: none;
                 display: flex;
                 align-items: center;
                 padding: 0 28px;
@@ -308,35 +319,43 @@ if ($authStatus !== 'authenticated') {
                 font-size: 1.25rem;
                 font-weight: 800;
                 letter-spacing: 1px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
             }
 
             .header-search {
                 flex: 1;
                 max-width: 420px;
                 background: rgba(255, 255, 255, 0.04);
-                border: 1px solid rgba(255, 255, 255, 0.05);
-                border-radius: 20px;
+                backdrop-filter: blur(20px) saturate(1.8);
+                -webkit-backdrop-filter: blur(20px) saturate(1.8);
+                border: 1px solid rgba(255, 255, 255, 0.06);
+                border-radius: 24px;
                 padding: 10px 18px;
                 color: #FFF;
                 font-family: inherit;
                 font-size: 0.9rem;
                 outline: none;
                 transition: all 0.3s ease;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
             }
 
             .header-search:focus {
                 border-color: var(--accent-pink);
-                box-shadow: 0 0 15px rgba(255, 0, 127, 0.2);
+                box-shadow: 0 0 20px rgba(255, 0, 127, 0.3);
             }
 
             .header-badge {
                 font-size: 0.8rem;
                 color: var(--accent-green);
                 background: rgba(0, 255, 136, 0.12);
+                backdrop-filter: blur(16px);
                 border: 1px solid rgba(0, 255, 136, 0.25);
                 padding: 6px 14px;
                 border-radius: 16px;
                 font-weight: 600;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
             }
 
             .header-clock-badge {
@@ -344,23 +363,26 @@ if ($authStatus !== 'authenticated') {
                 font-weight: 700;
                 color: var(--accent-cyan);
                 background: rgba(0, 242, 254, 0.12);
+                backdrop-filter: blur(16px);
                 border: 1px solid rgba(0, 242, 254, 0.25);
                 padding: 6px 14px;
                 border-radius: 16px;
                 letter-spacing: 1px;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
             }
 
             /* Zone 2: Dedicated Library Panel (340px) */
             .studio-lib {
                 grid-area: lib;
-                background: var(--bg-glass);
-                backdrop-filter: blur(24px) saturate(1.8);
-                -webkit-backdrop-filter: blur(24px) saturate(1.8);
-                border-right: none;
+                background: transparent;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                border: none;
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
             }
+
 
 
             .lib-track-list {
@@ -374,30 +396,35 @@ if ($authStatus !== 'authenticated') {
                 display: flex;
                 align-items: center;
                 gap: 12px;
-                padding: 10px 12px;
-                border-radius: 12px;
-                margin-bottom: 6px;
+                padding: 10px 14px;
+                border-radius: 16px;
+                margin-bottom: 8px;
                 cursor: pointer;
-                transition: all 0.2s ease;
-                border: 1px solid transparent;
-                background: var(--bg-card);
+                transition: all 0.25s ease;
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                background: rgba(255, 255, 255, 0.03);
+                backdrop-filter: blur(20px) saturate(1.8);
+                -webkit-backdrop-filter: blur(20px) saturate(1.8);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
             }
 
             .lib-track-item:hover {
-                background: var(--bg-card-hover);
-                transform: translateX(4px);
-                border-color: rgba(255, 255, 255, 0.1);
+                background: rgba(255, 255, 255, 0.07);
+                transform: translateX(4px) translateY(-2px);
+                border-color: rgba(255, 0, 127, 0.35);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
             }
 
             .lib-track-item.active {
-                background: linear-gradient(90deg, rgba(255, 0, 127, 0.22), rgba(121, 40, 202, 0.22));
-                border-color: rgba(255, 0, 127, 0.4);
+                background: linear-gradient(135deg, rgba(255, 0, 127, 0.25), rgba(121, 40, 202, 0.25));
+                border-color: rgba(255, 0, 127, 0.5);
+                box-shadow: 0 8px 28px rgba(255, 0, 127, 0.25);
             }
 
             .track-art-thumb {
                 width: 44px;
                 height: 44px;
-                border-radius: 8px;
+                border-radius: 10px;
                 object-fit: cover;
                 background: linear-gradient(135deg, #1E1B4B 0%, #31103F 100%);
             }
@@ -439,9 +466,9 @@ if ($authStatus !== 'authenticated') {
                 width: 280px;
                 height: 280px;
                 aspect-ratio: 1;
-                border-radius: 24px;
+                border-radius: 28px;
                 object-fit: cover;
-                box-shadow: 0 30px 60px rgba(0, 0, 0, 0.75), 0 0 40px rgba(255, 0, 127, 0.3);
+                box-shadow: 0 30px 70px rgba(0, 0, 0, 0.75), 0 0 50px rgba(255, 0, 127, 0.35);
                 border: 1px solid rgba(255, 255, 255, 0.15);
                 transition: transform 0.3s ease;
                 background: linear-gradient(135deg, #1E1B4B 0%, #31103F 100%);
@@ -523,8 +550,9 @@ if ($authStatus !== 'authenticated') {
             }
 
             .stage-action-btn {
-                background: rgba(255, 255, 255, 0.1);
-                border: 1px solid var(--border-color);
+                background: rgba(255, 255, 255, 0.05);
+                backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.08);
                 color: #FFF;
                 padding: 8px 18px;
                 border-radius: 20px;
@@ -535,6 +563,7 @@ if ($authStatus !== 'authenticated') {
                 align-items: center;
                 gap: 8px;
                 transition: all 0.2s ease;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
             }
 
             .stage-action-btn:hover {
@@ -545,10 +574,10 @@ if ($authStatus !== 'authenticated') {
             /* Zone 4: Simplified Recently Played Drawer (300px) */
             .studio-queue {
                 grid-area: queue;
-                background: var(--bg-glass);
-                backdrop-filter: blur(24px) saturate(1.8);
-                -webkit-backdrop-filter: blur(24px) saturate(1.8);
-                border-left: none;
+                background: transparent;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                border: none;
                 padding: 20px;
                 display: flex;
                 flex-direction: column;
@@ -569,11 +598,6 @@ if ($authStatus !== 'authenticated') {
             }
 
             .history-card {
-                background: var(--bg-card);
-                border: 1px solid rgba(255, 255, 255, 0.03);
-                border-radius: 14px;
-                padding: 10px 12px;
-                display: flex;
                 align-items: center;
                 gap: 10px;
                 cursor: pointer;
@@ -1038,7 +1062,7 @@ if ($authStatus !== 'authenticated') {
     <div class="splash-bg"></div>
     <div class="splash-card">
         <div class="splash-logo-ring">
-            <span class="splash-logo-icon">🎵</span>
+            <img src="assets/okotunes%20logo.png" alt="OkoTunes Logo" style="width: 48px; height: 48px; border-radius: 14px; object-fit: contain;" />
         </div>
         <div class="splash-brand">
             <h1>okotunes</h1>
@@ -1065,8 +1089,10 @@ if ($authStatus !== 'authenticated') {
     <!-- ─────────────────────────────────────────────────────────────── -->
     <div id="studio-app">
         <!-- Zone 1: Left Action Dock (64px) -->
-        <aside class="studio-dock">
-            <div class="dock-logo">🎧</div>
+        <aside class="studio-dock" style="border-radius: 20px;">
+            <div class="dock-logo">
+                <img src="assets/okotunes%20logo.png" alt="OkoTunes Logo" style="width: 38px; height: 38px; border-radius: 12px; object-fit: contain; box-shadow: 0 4px 14px rgba(255,0,127,0.35);" />
+            </div>
             <a class="dock-btn" href="/index.php" title="Gateway Home">
                 <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             </a>
@@ -1089,7 +1115,10 @@ if ($authStatus !== 'authenticated') {
 
         <!-- Header -->
         <header class="studio-header">
-            <div class="header-title">okotunes Studio Pro</div>
+            <div class="header-title">
+                <img src="assets/okotunes%20logo.png" alt="Logo" style="height: 30px; border-radius: 8px; object-fit: contain;" />
+                <span>okotunes Studio Pro</span>
+            </div>
             <input class="header-search" type="text" placeholder="🔍  Search 2,970+ tracks..." x-model="query" @input="filter()" />
             <div class="header-badge" x-text="tracks.length + ' tracks loaded'"></div>
             <div class="header-clock-badge" x-text="clockTime"></div>
@@ -1100,7 +1129,8 @@ if ($authStatus !== 'authenticated') {
             <ul class="lib-track-list">
                 <template x-for="(t, i) in filtered" :key="t.url">
                     <li class="lib-track-item" :class="{active: current && current.url === t.url}" @click="play(i)">
-                        <img class="track-art-thumb" :src="t.artUrl || 'assets/album_placeholder.png'" @error="$el.onerror=null; $el.src='assets/album_placeholder.png'" alt="" />
+                        <img class="track-art-thumb" :src="t.artUrl || 'assets/album%20art%20new%20place%20holder.png'" @error="$el.onerror=null; $el.src='assets/album%20art%20new%20place%20holder.png'" alt="" />
+
                         <div style="flex: 1; overflow: hidden;">
                             <div class="track-meta-title" x-text="cleanTitle(t.name)"></div>
                             <div style="display: flex; gap: 6px; align-items: center; margin-top: 2px;">
@@ -1130,7 +1160,7 @@ if ($authStatus !== 'authenticated') {
         <main class="studio-stage">
             <template x-if="current">
                 <div style="display: flex; flex-direction: column; align-items: center;">
-                    <img class="hero-artwork-card" :src="currentArt" @error="$el.onerror=null; $el.src='assets/album_placeholder.png'" alt="Artwork" />
+                    <img class="hero-artwork-card" :src="currentArt" @error="$el.onerror=null; $el.src='assets/album%20art%20new%20place%20holder.png'" alt="Artwork" />
                     
                     <div class="hero-track-title">
                         <span x-text="cleanTitle(current ? current.name : '')"></span>
@@ -1175,7 +1205,7 @@ if ($authStatus !== 'authenticated') {
             <div class="queue-history-header">🕒 RECENTLY PLAYED</div>
             <template x-for="(rName, idx) in recent" :key="idx">
                 <div class="history-card" @click="playByName(rName)">
-                    <img class="history-art" :src="getTrackArtByName(rName)" @error="$el.onerror=null; $el.src='assets/album_placeholder.png'" alt="" />
+                    <img class="history-art" :src="getTrackArtByName(rName)" @error="$el.onerror=null; $el.src='assets/album%20art%20new%20place%20holder.png'" alt="" />
                     <div style="flex: 1; overflow: hidden;">
                         <div style="font-size: 0.82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" x-text="cleanTitle(rName)"></div>
                         <div style="font-size: 0.68rem; color: var(--accent-cyan);">Played Recently</div>
@@ -1190,7 +1220,7 @@ if ($authStatus !== 'authenticated') {
         <!-- Fixed Bottom Player Control Bar -->
         <footer class="studio-player">
             <div style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
-                <img :src="currentArt" @error="$el.onerror=null; $el.src='assets/album_placeholder.png'" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover; flex-shrink: 0;" x-show="current" />
+                <img :src="currentArt" @error="$el.onerror=null; $el.src='assets/album%20art%20new%20place%20holder.png'" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover; flex-shrink: 0;" x-show="current" />
                 <div style="min-width: 0; overflow: hidden;">
                     <div style="font-weight: 700; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" x-text="cleanTitle(current ? current.name : 'No track selected')"></div>
                     <div style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 600;">okotunes Workstation</div>
@@ -1777,7 +1807,7 @@ class SpatialAudioEngine {
 function okotunesApp() {
     return {
         tracks: [], filtered: [], query: '',
-        current: null, currentArt: 'assets/album_placeholder.png', isPlaying: false,
+        current: null, currentArt: 'assets/album%20art%20new%20place%20holder.png', isPlaying: false,
         shuffle: false, loopMode: 'none',
         studioTab: 'library', mobileTab: 'player',
         recent: JSON.parse(localStorage.getItem('mspot_recent') || '[]'),
