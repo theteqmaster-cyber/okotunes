@@ -171,10 +171,10 @@ if ($authStatus !== 'authenticated') {
 
         :root {
             --bg-dark: #060911;
-            --bg-glass: rgba(10, 14, 26, 0.32);
-            --bg-card: rgba(255, 255, 255, 0.05);
-            --bg-card-hover: rgba(255, 255, 255, 0.1);
-            --border-color: rgba(255, 255, 255, 0.09);
+            --bg-glass: rgba(6, 9, 17, 0.15);
+            --bg-card: rgba(255, 255, 255, 0.025);
+            --bg-card-hover: rgba(255, 255, 255, 0.07);
+            --border-color: rgba(255, 255, 255, 0.04);
             --accent-pink: #FF007F;
             --accent-purple: #7928CA;
             --accent-cyan: #00F2FE;
@@ -201,7 +201,7 @@ if ($authStatus !== 'authenticated') {
             z-index: 0;
             background-size: cover;
             background-position: center;
-            filter: blur(6px) brightness(0.7);
+            filter: blur(20px) brightness(0.6);
             opacity: 0.95;
             transition: background-image 0.8s ease;
             pointer-events: none;
@@ -211,8 +211,8 @@ if ($authStatus !== 'authenticated') {
             position: fixed;
             inset: 0;
             z-index: 1;
-            background: radial-gradient(circle at 50% 30%, rgba(121, 40, 202, 0.1), transparent 70%),
-                        linear-gradient(to bottom, rgba(6, 9, 17, 0.25), rgba(6, 9, 17, 0.8));
+            background: radial-gradient(circle at 50% 30%, rgba(121, 40, 202, 0.12), transparent 70%),
+                        linear-gradient(to bottom, rgba(6, 9, 17, 0.15), rgba(6, 9, 17, 0.7));
             pointer-events: none;
         }
 
@@ -238,8 +238,10 @@ if ($authStatus !== 'authenticated') {
             .studio-dock {
                 grid-area: dock;
                 background: var(--bg-glass);
-                backdrop-filter: blur(16px);
-                border-right: 1px solid var(--border-color);
+                backdrop-filter: blur(24px) saturate(1.8);
+                -webkit-backdrop-filter: blur(24px) saturate(1.8);
+                border-right: none;
+                box-shadow: 4px 0 24px rgba(0,0,0,0.15);
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -247,6 +249,7 @@ if ($authStatus !== 'authenticated') {
                 gap: 20px;
                 z-index: 20;
             }
+
 
             .dock-logo {
                 font-size: 1.5rem;
@@ -290,8 +293,9 @@ if ($authStatus !== 'authenticated') {
             .studio-header {
                 grid-area: header;
                 background: var(--bg-glass);
-                backdrop-filter: blur(16px);
-                border-bottom: 1px solid var(--border-color);
+                backdrop-filter: blur(24px) saturate(1.8);
+                -webkit-backdrop-filter: blur(24px) saturate(1.8);
+                border-bottom: none;
                 display: flex;
                 align-items: center;
                 padding: 0 28px;
@@ -307,8 +311,8 @@ if ($authStatus !== 'authenticated') {
             .header-search {
                 flex: 1;
                 max-width: 420px;
-                background: rgba(255, 255, 255, 0.06);
-                border: 1px solid var(--border-color);
+                background: rgba(255, 255, 255, 0.04);
+                border: 1px solid rgba(255, 255, 255, 0.05);
                 border-radius: 20px;
                 padding: 10px 18px;
                 color: #FFF;
@@ -348,12 +352,14 @@ if ($authStatus !== 'authenticated') {
             .studio-lib {
                 grid-area: lib;
                 background: var(--bg-glass);
-                backdrop-filter: blur(16px);
-                border-right: 1px solid var(--border-color);
+                backdrop-filter: blur(24px) saturate(1.8);
+                -webkit-backdrop-filter: blur(24px) saturate(1.8);
+                border-right: none;
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
             }
+
 
             .lib-track-list {
                 flex: 1;
@@ -538,8 +544,9 @@ if ($authStatus !== 'authenticated') {
             .studio-queue {
                 grid-area: queue;
                 background: var(--bg-glass);
-                backdrop-filter: blur(16px);
-                border-left: 1px solid var(--border-color);
+                backdrop-filter: blur(24px) saturate(1.8);
+                -webkit-backdrop-filter: blur(24px) saturate(1.8);
+                border-left: none;
                 padding: 20px;
                 display: flex;
                 flex-direction: column;
@@ -561,7 +568,17 @@ if ($authStatus !== 'authenticated') {
 
             .history-card {
                 background: var(--bg-card);
-                border: 1px solid var(--border-color);
+                border: 1px solid rgba(255, 255, 255, 0.03);
+                border-radius: 14px;
+                padding: 10px 12px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                cursor: pointer;
+                transition: all 0.25s ease;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            }
+
                 border-radius: 12px;
                 padding: 8px 10px;
                 display: flex;
