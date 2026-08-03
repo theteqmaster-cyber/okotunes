@@ -13,6 +13,109 @@
     
     <script src="assets/alpine.min.js" defer></script>
     <style>
+        /* ── SPLASH SCREEN ──────────────────────────────────────────── */
+        #okotunes-splash {
+            position: fixed; inset: 0; z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            background: #060911;
+            transition: opacity 0.7s ease, visibility 0.7s ease;
+        }
+        #okotunes-splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .splash-bg {
+            position: absolute; inset: 0;
+            background: url('assets/splash_bg.jpg') center/cover no-repeat;
+            filter: blur(8px) brightness(0.35);
+            transform: scale(1.08);
+        }
+        .splash-card {
+            position: relative; z-index: 1;
+            background: rgba(6, 9, 17, 0.55);
+            backdrop-filter: blur(24px) saturate(1.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 28px;
+            padding: 48px 56px;
+            display: flex; flex-direction: column; align-items: center;
+            gap: 28px;
+            box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,0,127,0.08);
+            min-width: 280px;
+        }
+        .splash-logo-ring {
+            width: 88px; height: 88px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF007F, #7928CA);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 40px rgba(255,0,127,0.45);
+            animation: splash-pulse 2s ease-in-out infinite;
+        }
+        @keyframes splash-pulse {
+            0%,100% { box-shadow: 0 0 30px rgba(255,0,127,0.4); }
+            50% { box-shadow: 0 0 60px rgba(255,0,127,0.7), 0 0 100px rgba(121,40,202,0.3); }
+        }
+        .splash-logo-icon { font-size: 2.4rem; }
+        .splash-brand { text-align: center; }
+        .splash-brand h1 {
+            font-size: 2rem; font-weight: 800;
+            background: linear-gradient(135deg, #FF007F, #7928CA);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .splash-brand p { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-top: 4px; letter-spacing: 1.5px; text-transform: uppercase; }
+        .splash-progress-track {
+            width: 100%; height: 3px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 99px; overflow: hidden;
+        }
+        .splash-progress-fill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, #FF007F, #7928CA);
+            border-radius: 99px;
+            transition: width 0.1s linear;
+        }
+        /* ── COVER ART MODAL ─────────────────────────────────────── */
+        .art-modal-overlay {
+            position: fixed; inset: 0; z-index: 900;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(6px);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .art-modal-card {
+            background: rgba(12,16,28,0.97);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 40px 44px;
+            min-width: 320px; max-width: 380px;
+            display: flex; flex-direction: column; align-items: center;
+            gap: 20px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .art-modal-icon { font-size: 2.4rem; line-height: 1; }
+        .art-modal-card h3 { font-size: 1.25rem; font-weight: 700; color: #fff; }
+        .art-modal-card p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; }
+        .art-modal-actions { display: flex; gap: 12px; margin-top: 4px; }
+        .art-btn-cancel {
+            padding: 10px 24px; border-radius: 12px;
+            background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+            color: var(--text-secondary); cursor: pointer; font-size: 0.9rem;
+        }
+        .art-btn-go {
+            padding: 10px 28px; border-radius: 12px;
+            background: linear-gradient(135deg, #FF007F, #7928CA);
+            border: none; color: #fff; cursor: pointer;
+            font-size: 0.9rem; font-weight: 600;
+        }
+        .art-spinner-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+        .art-spinner {
+            width: 52px; height: 52px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: #FF007F;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .art-status-text { font-size: 0.88rem; color: var(--text-secondary); min-height: 20px; }
+        .art-result-ok { color: #00FF88; font-weight: 600; font-size: 0.95rem; }
+        .art-result-fail { color: rgba(255,100,100,0.9); font-size: 0.88rem; }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
@@ -860,6 +963,23 @@
 </head>
 <body>
 
+<!-- ── SPLASH SCREEN (once per session) ──────────────────────────────── -->
+<div id="okotunes-splash">
+    <div class="splash-bg"></div>
+    <div class="splash-card">
+        <div class="splash-logo-ring">
+            <span class="splash-logo-icon">🎵</span>
+        </div>
+        <div class="splash-brand">
+            <h1>okotunes</h1>
+            <p>Studio Pro &amp; Mobile</p>
+        </div>
+        <div class="splash-progress-track" style="width: 200px;">
+            <div class="splash-progress-fill" id="splash-bar"></div>
+        </div>
+    </div>
+</div>
+
 <div x-data="okotunesApp()" x-init="boot()">
 
     <!-- Toast Notification Badge -->
@@ -952,6 +1072,7 @@
                     <div class="stage-action-row">
                         <button class="stage-action-btn" @click="downloadCurrentTrack()">⬇️ Download Track</button>
                         <button class="stage-action-btn" @click="showUploadModal = true">☁️ Upload Music</button>
+                        <button class="stage-action-btn" @click="showCoverArtModal = true" title="Get Cover Art" style="padding: 10px 14px; font-size: 1.1rem; min-width: unset;">✨</button>
                     </div>
                 </div>
             </template>
@@ -1151,6 +1272,43 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10v4M6 6v12M10 3v18M14 6v12M18 10v4"/></svg>
             </button>
         </nav>
+    </div>
+
+    <!-- ── COVER ART MODAL ──────────────────────────────────────────────────── -->
+    <div class="art-modal-overlay" x-show="showCoverArtModal" x-cloak @click.self="if(coverArtState !== 'fetching') { showCoverArtModal = false; coverArtState = 'idle'; }">
+        <div class="art-modal-card">
+            <template x-if="coverArtState === 'idle'">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:20px;">
+                    <div class="art-modal-icon">🎨</div>
+                    <h3>Get Cover Art?</h3>
+                    <p>okotunes will scan your library and automatically fetch official album artwork for tracks that don't have one.</p>
+                    <div class="art-modal-actions">
+                        <button class="art-btn-cancel" @click="showCoverArtModal = false">Cancel</button>
+                        <button class="art-btn-go" @click="fetchCoverArt()">Yes, fetch art</button>
+                    </div>
+                </div>
+            </template>
+            <template x-if="coverArtState === 'fetching'">
+                <div class="art-spinner-wrap">
+                    <div class="art-spinner"></div>
+                    <p class="art-status-text" x-text="coverArtMsg || 'Searching...'"></p>
+                </div>
+            </template>
+            <template x-if="coverArtState === 'done'">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+                    <div style="font-size:2.4rem">✅</div>
+                    <p class="art-result-ok" x-text="coverArtMsg"></p>
+                    <button class="art-btn-go" @click="showCoverArtModal = false; coverArtState = 'idle';">Done</button>
+                </div>
+            </template>
+            <template x-if="coverArtState === 'error'">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+                    <div style="font-size:2.4rem">😕</div>
+                    <p class="art-result-fail" x-text="coverArtMsg"></p>
+                    <button class="art-btn-cancel" @click="showCoverArtModal = false; coverArtState = 'idle';">Close</button>
+                </div>
+            </template>
+        </div>
     </div>
 
     <!-- ── UPLOAD MODAL UI ────────────────────────────────────────────────── -->
@@ -1530,6 +1688,9 @@ function okotunesApp() {
         uploadQueue: [], isUploading: false,
         statsCounts: {},
         touchStartX: 0, touchEndX: 0,
+        showCoverArtModal: false,
+        coverArtState: 'idle', // idle | fetching | done | error
+        coverArtMsg: '',
 
         get spatialModeLabel() {
             const found = this.spatialPresets.find(p => p.id === this.spatialMode);
@@ -1552,9 +1713,29 @@ function okotunesApp() {
         boot() {
             const audio = this.$refs.audio;
             this.reloadTracks();
-
             this.updateClock();
             setInterval(() => this.updateClock(), 1000);
+
+            // Splash screen - once per session
+            const splashEl = document.getElementById('okotunes-splash');
+            const splashBar = document.getElementById('splash-bar');
+            const SPLASH_DURATION = 5000;
+            if (splashEl && !sessionStorage.getItem('okt_splashed')) {
+                let elapsed = 0;
+                const step = 80;
+                const timer = setInterval(() => {
+                    elapsed += step;
+                    const pct = Math.min((elapsed / SPLASH_DURATION) * 100, 100);
+                    if (splashBar) splashBar.style.width = pct + '%';
+                    if (elapsed >= SPLASH_DURATION) {
+                        clearInterval(timer);
+                        splashEl.classList.add('hidden');
+                        sessionStorage.setItem('okt_splashed', '1');
+                    }
+                }, step);
+            } else if (splashEl) {
+                splashEl.classList.add('hidden');
+            }
 
             audio.addEventListener('timeupdate', () => {
                 if (!audio.duration) return;
@@ -1565,24 +1746,61 @@ function okotunesApp() {
                 this.duration = this.fmt(audio.duration);
                 this.updateMediaPositionState();
             });
-
-            audio.addEventListener('ended', () => {
-                this.next();
-            });
-
-            audio.addEventListener('pause', () => { 
+            audio.addEventListener('ended', () => { this.next(); });
+            audio.addEventListener('pause', () => {
                 this.isPlaying = false;
                 if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
             });
-            audio.addEventListener('play', () => { 
+            audio.addEventListener('play', () => {
                 this.isPlaying = true;
-                if (!this.audioEngine) {
-                    this.audioEngine = new SpatialAudioEngine(audio);
-                }
+                if (!this.audioEngine) this.audioEngine = new SpatialAudioEngine(audio);
                 this.audioEngine.setMode(this.spatialMode);
                 if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
             });
         },
+
+        async fetchCoverArt() {
+            this.coverArtState = 'fetching';
+            this.coverArtMsg = 'Searching for artwork...';
+            let totalFetched = 0;
+            let batch = 0;
+
+            const runBatch = async () => {
+                try {
+                    const res = await fetch('fetch_art.php?batch=4');
+                    const data = await res.json();
+                    totalFetched += (data.fetched || 0);
+                    batch++;
+
+                    if (data.fetched > 0) {
+                        this.coverArtMsg = `Found ${totalFetched} cover${totalFetched !== 1 ? 's' : ''} so far...`;
+                        this.reloadTracksSilent();
+                    }
+
+                    if (data.remaining_pending > 0) {
+                        this.coverArtMsg = `Found ${totalFetched} so far, checking more...`;
+                        await new Promise(r => setTimeout(r, 600));
+                        return runBatch();
+                    }
+
+                    // All done
+                    if (totalFetched > 0) {
+                        this.coverArtState = 'done';
+                        this.coverArtMsg = `${totalFetched} cover art image${totalFetched !== 1 ? 's' : ''} fetched!`;
+                        this.reloadTracksSilent();
+                    } else {
+                        this.coverArtState = 'done';
+                        this.coverArtMsg = 'All tracks already have cover art.';
+                    }
+                } catch (e) {
+                    this.coverArtState = 'error';
+                    this.coverArtMsg = 'Could not reach the cover art service. Check your connection.';
+                }
+            };
+            await runBatch();
+        },
+
+
 
         updateMediaSession() {
             if (!('mediaSession' in navigator) || !this.current) return;
