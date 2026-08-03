@@ -13,6 +13,13 @@ require_once __DIR__ . '/r2_storage.php';
 
 $batchSize = isset($_GET['batch']) ? max(1, min(10, (int)$_GET['batch'])) : 4;
 $trackId   = $_GET['id'] ?? null;
+$force     = !empty($_GET['force']); // If true, resets all art to pending so a full re-fetch happens
+
+// Force mode: reset art_status to 'pending' for all tracks so they'll be picked up again
+if ($force && !$trackId) {
+    $db = getDb();
+    $db->exec("UPDATE tracks SET art_status = 'pending' WHERE 1");
+}
 
 $pendingTracks = [];
 if ($trackId) {
@@ -27,13 +34,14 @@ if ($trackId) {
 
 if (empty($pendingTracks)) {
     echo json_encode([
-        'status' => 'success',
-        'message' => 'No pending tracks requiring artwork',
-        'processed' => 0,
+        'status'  => 'success',
+        'message' => $force ? 'No tracks in library' : 'No pending tracks requiring artwork',
+        'processed'        => 0,
         'remaining_pending' => 0
     ]);
     exit;
 }
+
 
 $r2 = getR2();
 $processed = 0;

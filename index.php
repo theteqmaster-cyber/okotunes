@@ -1761,16 +1761,25 @@ function okotunesApp() {
 
         async fetchCoverArt() {
             this.coverArtState = 'fetching';
-            this.coverArtMsg = 'Searching for artwork...';
+            this.coverArtMsg = 'Resetting artwork register...';
             let totalFetched = 0;
-            let batch = 0;
+            let isFirst = true;
 
             const runBatch = async () => {
                 try {
-                    const res = await fetch('fetch_art.php?batch=4');
+                    // First call uses force=1 to reset all art_status to pending for a real re-fetch
+                    const url = isFirst
+                        ? 'fetch_art.php?batch=4&force=1'
+                        : 'fetch_art.php?batch=4';
+                    isFirst = false;
+
+                    this.coverArtMsg = totalFetched === 0
+                        ? 'Searching iTunes & Deezer...'
+                        : `Found ${totalFetched} so far, searching more...`;
+
+                    const res = await fetch(url);
                     const data = await res.json();
                     totalFetched += (data.fetched || 0);
-                    batch++;
 
                     if (data.fetched > 0) {
                         this.coverArtMsg = `Found ${totalFetched} cover${totalFetched !== 1 ? 's' : ''} so far...`;
@@ -1778,8 +1787,7 @@ function okotunesApp() {
                     }
 
                     if (data.remaining_pending > 0) {
-                        this.coverArtMsg = `Found ${totalFetched} so far, checking more...`;
-                        await new Promise(r => setTimeout(r, 600));
+                        await new Promise(r => setTimeout(r, 500));
                         return runBatch();
                     }
 
@@ -1790,11 +1798,11 @@ function okotunesApp() {
                         this.reloadTracksSilent();
                     } else {
                         this.coverArtState = 'done';
-                        this.coverArtMsg = 'All tracks already have cover art.';
+                        this.coverArtMsg = 'No matching artwork found for your tracks.';
                     }
                 } catch (e) {
                     this.coverArtState = 'error';
-                    this.coverArtMsg = 'Could not reach the cover art service. Check your connection.';
+                    this.coverArtMsg = 'Could not reach the cover art service.';
                 }
             };
             await runBatch();
