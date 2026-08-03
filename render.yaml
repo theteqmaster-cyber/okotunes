@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: okotunes
+    env: docker
+    dockerfilePath: Dockerfile
+    plan: free
+    region: oregon
+    healthCheckPath: /api.php
+    envVars:
+      - key: R2_ACCOUNT_ID
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET_NAME
+        sync: false
+      - key: R2_PUBLIC_URL
+        sync: false
+      - key: OKOTUNES_ADMIN_PASS
+        sync: false
+    disk:
+      name: okotunes-data
+      mountPath: /var/www/html/data
+      sizeGB: 1

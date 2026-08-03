@@ -1,0 +1,8 @@
+# Environment variables and secrets
+.env
+.env.*
+
+# Local caches and data
+cache/
+data/
+*.sqlite

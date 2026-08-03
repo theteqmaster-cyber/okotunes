@@ -1,0 +1,11 @@
+.git
+.gitignore
+.env
+.env.*
+cache/art/*
+data/*.sqlite
+data/*.json
+mspot-mobile.apk
+*.md
+Dockerfile
+render.yaml

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    margin: 0; height: 100vh;
+  }
+  #app {
+    display: grid;
+    grid-template-rows: 64px 1fr 60px;
+    height: 100%;
+  }
+  .header { background: rgba(0,0,0,0.5); z-index: 100; position: relative; color: white;}
+  .main { grid-row: 2; position: relative; z-index: 0; }
+  .main-bg {
+    position: fixed;
+    inset: -20px;
+    background: url('https://picsum.photos/400') center/cover;
+    filter: blur(10px);
+    z-index: -2;
+  }
+  .tabs { background: rgba(255,0,0,0.5); z-index: 100; position: relative; color: white;}
+</style>
+</head>
+<body>
+  <div id="app">
+    <div class="header">Header</div>
+    <div class="main">
+      <div class="main-bg"></div>
+      <h1 style="color:white">Content</h1>
+    </div>
+    <div class="tabs">Tabs</div>
+  </div>
+</body>
+</html>

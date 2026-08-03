@@ -1,0 +1,14 @@
+[Unit]
+Description=MSpot - Local Music Streamer
+After=network.target
+
+[Service]
+Type=simple
+User=mphatic
+WorkingDirectory=/home/mphatic/Desktop/mspot
+Environment=PHP_CLI_SERVER_WORKERS=8
+ExecStart=/usr/bin/php -S 0.0.0.0:8080
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
