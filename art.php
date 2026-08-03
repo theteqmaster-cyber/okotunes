@@ -9,13 +9,17 @@ require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/r2_storage.php';
 
 if (is_decoy() || !is_authenticated()) {
-    $fallback = __DIR__ . '/assets/splash_bg.jpg';
+    $fallback = __DIR__ . '/assets/album art new place holder.png';
+    if (!file_exists($fallback)) {
+        $fallback = __DIR__ . '/assets/album_placeholder.png';
+    }
     if (file_exists($fallback)) {
-        header('Content-Type: image/jpeg');
+        header('Content-Type: image/png');
         readfile($fallback);
         exit;
     }
 }
+
 
 
 $trackId  = $_GET['id'] ?? null;

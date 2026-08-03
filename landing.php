@@ -1,7 +1,7 @@
 <?php
 /**
  * landing.php - Wall 1 (Commercial Paywall Landing Page) & Wall 2 (Interactive CAPTCHA Challenge).
- * Serves as the public-facing camouflage for okotunes.
+ * Inspired by modern high-converting bento layouts with vibrant neon gradients & sleek typography.
  */
 $pendingChallenge = (get_auth_status() === 'pending_challenge');
 $captchaTarget = $_SESSION['captcha_target'] ?? 1;
@@ -15,87 +15,135 @@ $captchaTarget = $_SESSION['captcha_target'] ?? 1;
     <link rel="icon" href="data:,">
     <script src="assets/alpine.min.js" defer></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap');
         
         :root {
-            --bg-gradient: linear-gradient(135deg, #050711 0%, #100b24 50%, #070512 100%);
-            --glass-card: rgba(18, 14, 36, 0.45);
-            --glass-border: rgba(255, 255, 255, 0.06);
+            --bg-gradient: linear-gradient(180deg, #05030a 0%, #0d071b 40%, #070512 100%);
+            --hero-gradient: linear-gradient(135deg, #7928CA 0%, #FF007F 50%, #FFB800 100%);
+            --glass-card: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.08);
             --accent-pink: #FF007F;
-            --accent-purple: #7928CA;
-            --accent-gradient: linear-gradient(135deg, #FF007F 0%, #7928CA 100%);
+            --accent-gold: #FFB800;
             --text-main: #FFFFFF;
             --text-sub: #94A3B8;
+            --text-dark: #1E293B;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg-gradient); color: var(--text-main); min-height: 100vh; overflow-x: hidden; position: relative; }
-
-        /* Background Aura */
-        .bg-aura {
-            position: fixed; inset: 0; pointer-events: none; z-index: 0;
-            background: radial-gradient(circle at 50% 20%, rgba(255,0,127,0.18), transparent 65%),
-                        radial-gradient(circle at 80% 80%, rgba(121,40,202,0.15), transparent 55%);
-        }
+        body { background: #070512; color: var(--text-main); min-height: 100vh; overflow-x: hidden; position: relative; }
 
         /* Top Navigation Header */
         .header {
-            position: relative; z-index: 10; height: 72px; padding: 0 32px;
+            position: relative; z-index: 10; height: 80px; padding: 0 40px;
             display: flex; align-items: center; justify-content: space-between;
-            background: rgba(5, 7, 17, 0.35); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border);
+            background: rgba(7, 5, 18, 0.6); backdrop-filter: blur(24px); border-bottom: 1px solid var(--glass-border);
         }
-        .brand-logo { font-family: 'Outfit', sans-serif; font-size: 24px; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .brand-logo-img { height: 36px; object-fit: contain; }
         .nav-btn {
-            padding: 10px 22px; border-radius: 30px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.25s ease;
+            padding: 12px 26px; border-radius: 30px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.25s ease;
         }
         .btn-ghost { background: transparent; color: rgba(255,255,255,0.7); border: 1px solid var(--glass-border); }
-        .btn-ghost:hover { color: #fff; border-color: rgba(255,0,127,0.4); }
-        .btn-accent { background: var(--accent-gradient); color: #fff; border: none; box-shadow: 0 8px 24px rgba(255,0,127,0.35); }
+        .btn-accent {
+            background: linear-gradient(135deg, #FF007F 0%, #7928CA 100%); color: #fff; border: none;
+            box-shadow: 0 8px 24px rgba(255,0,127,0.35);
+        }
         .btn-accent:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(255,0,127,0.5); }
 
-        /* Hero Section */
-        .hero { position: relative; z-index: 1; max-width: 1080px; margin: 60px auto 40px; padding: 0 24px; text-align: center; }
-        .badge {
-            display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 1.5px; background: rgba(255,0,127,0.12); border: 1px solid rgba(255,0,127,0.3); color: var(--accent-pink); margin-bottom: 24px;
+        /* Hero Section (Gradient Banner) */
+        .hero-banner {
+            position: relative; padding: 80px 40px 100px;
+            background: radial-gradient(circle at 70% 30%, rgba(255, 184, 0, 0.25) 0%, rgba(255, 0, 127, 0.35) 40%, rgba(121, 40, 202, 0.45) 70%, transparent 100%);
+            border-bottom: 1px solid var(--glass-border); overflow: hidden;
         }
-        .hero h1 { font-family: 'Outfit', sans-serif; font-size: clamp(2.5rem, 5.5vw, 4.5rem); font-weight: 800; line-height: 1.15; margin-bottom: 20px; letter-spacing: -1px; }
-        .hero h1 span { background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { font-size: 1.15rem; color: var(--text-sub); max-width: 760px; margin: 0 auto 36px; line-height: 1.6; }
+        .hero-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center; }
+        
+        .serif-italic { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 1.8rem; color: rgba(255,255,255,0.85); margin-bottom: 8px; }
+        .hero-title { font-family: 'Outfit', sans-serif; font-size: clamp(2.8rem, 5.5vw, 4.8rem); font-weight: 800; line-height: 1.08; letter-spacing: -1.5px; margin-bottom: 24px; }
+        .hero-desc { font-size: 1.15rem; color: rgba(255,255,255,0.8); line-height: 1.6; max-width: 540px; margin-bottom: 32px; }
 
-        /* Features Grid */
-        .hero-features-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
-            margin: 40px 0 50px; text-align: left;
+        .hero-media-card {
+            position: relative; border-radius: 28px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.15);
+            background: linear-gradient(135deg, rgba(255,0,127,0.2), rgba(121,40,202,0.2)); backdrop-filter: blur(20px);
         }
-        .feature-card {
-            background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(16px); border: 1px solid var(--glass-border);
-            border-radius: 20px; padding: 24px; transition: all 0.3s ease;
-        }
-        .feature-card:hover { transform: translateY(-4px); background: rgba(255, 255, 255, 0.04); border-color: rgba(255,0,127,0.3); }
-        .feature-icon { font-size: 28px; margin-bottom: 12px; }
-        .feature-card h3 { font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 8px; }
-        .feature-card p { font-size: 13px; color: var(--text-sub); line-height: 1.5; }
+        .hero-img { width: 100%; height: auto; display: block; object-fit: cover; }
 
-        /* Paywall Card */
+        /* Trusted By Section (White Pill Cloud) */
+        .trusted-section { background: #FFFFFF; color: var(--text-dark); padding: 60px 40px; text-align: center; }
+        .trusted-header { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto 32px; }
+        .trusted-title { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #64748B; }
+
+        .trusted-grid {
+            max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+        }
+        .trusted-pill {
+            background: #F1F5F9; border-radius: 12px; padding: 18px 24px; font-size: 15px; font-weight: 700;
+            color: #334155; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s ease;
+        }
+        .trusted-pill:hover { background: #E2E8F0; transform: translateY(-2px); }
+
+        /* Section 2: Bento Grid Section */
+        .bento-section { max-width: 1200px; margin: 90px auto; padding: 0 30px; }
+        .bento-header { margin-bottom: 50px; }
+        .bento-header h2 { font-family: 'Outfit', sans-serif; font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 800; letter-spacing: -1px; margin-top: 6px; }
+        .bento-header p { font-size: 1.1rem; color: var(--text-sub); max-width: 560px; margin-top: 12px; }
+
+        .bento-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px; margin-bottom: 24px; }
+        
+        .bento-card {
+            border-radius: 28px; padding: 36px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
+            transition: all 0.35s ease; border: 1px solid var(--glass-border);
+        }
+        .bento-card:hover { transform: translateY(-5px); box-shadow: 0 24px 60px rgba(0,0,0,0.4); }
+
+        /* Bento 1: Large Neon Card */
+        .bento-card-neon {
+            background: linear-gradient(135deg, #FFB800 0%, #FF007F 50%, #7928CA 100%);
+            color: #FFF; min-height: 380px;
+        }
+        .bento-card-neon img { width: 65%; position: absolute; right: -20px; bottom: -20px; border-radius: 20px 0 0 0; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+
+        /* Bento 2: Light Glass Card */
+        .bento-card-glass {
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); min-height: 380px;
+        }
+        .monitor-graph {
+            width: 100%; height: 160px; background: rgba(0, 0, 0, 0.3); border-radius: 18px; border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px; margin-top: 20px; display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .graph-line { height: 4px; background: linear-gradient(90deg, #00FF88, #00F2FE); border-radius: 2px; width: 85%; animation: pulse 2s ease infinite alternate; }
+
+        /* Bento Row 2 */
+        .bento-grid-2 { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 24px; }
+        
+        .bento-card-dark { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); min-height: 340px; }
+        .avatar-cluster { display: flex; gap: -10px; margin-top: 20px; }
+        .avatar-img { width: 44px; height: 44px; border-radius: 50%; border: 3px solid #070512; margin-left: -12px; }
+        .avatar-img:first-child { margin-left: 0; }
+
+        .bento-card-purple {
+            background: linear-gradient(135deg, #7928CA 0%, #240046 100%); min-height: 340px; color: #FFF; position: relative;
+        }
+        .bento-card-purple img { position: absolute; right: 0; bottom: 0; height: 100%; width: 55%; object-fit: cover; opacity: 0.85; mask-image: linear-gradient(to left, rgba(0,0,0,1), transparent); }
+
+        /* Pricing Paywall Card */
+        .paywall-wrapper { max-width: 540px; margin: 90px auto; padding: 0 20px; text-align: center; }
         .paywall-card {
-            background: var(--glass-card); backdrop-filter: blur(28px); border: 1px solid var(--glass-border);
-            border-radius: 28px; padding: 44px 52px; max-width: 520px; margin: 0 auto; box-shadow: 0 32px 90px rgba(0,0,0,0.5); text-align: center;
+            background: rgba(18, 14, 36, 0.65); backdrop-filter: blur(28px); border: 1px solid var(--glass-border);
+            border-radius: 32px; padding: 48px; box-shadow: 0 32px 90px rgba(0,0,0,0.6);
         }
-        .price { font-family: 'Outfit', sans-serif; font-size: 3.4rem; font-weight: 800; color: #fff; margin: 12px 0 4px; }
+        .price { font-family: 'Outfit', sans-serif; font-size: 3.8rem; font-weight: 800; color: #fff; margin: 12px 0 4px; }
         .price span { font-size: 1.1rem; color: var(--text-sub); font-weight: 500; }
         
-        .features-list { list-style: none; margin: 24px 0 32px; text-align: left; display: flex; flex-direction: column; gap: 14px; font-size: 14px; color: #e2e8f0; }
-        .features-list li { display: flex; align-items: center; gap: 12px; }
-        .features-list li::before { content: "★"; color: var(--accent-pink); font-size: 12px; }
+        .features-list { list-style: none; margin: 28px 0 36px; text-align: left; display: flex; flex-direction: column; gap: 14px; font-size: 15px; color: #e2e8f0; }
+        .features-list li::before { content: "★"; color: var(--accent-pink); margin-right: 10px; }
 
         /* Modal Overlay */
         .modal-overlay {
-            position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.8); backdrop-filter: blur(16px);
+            position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.82); backdrop-filter: blur(18px);
             display: flex; align-items: center; justify-content: center; padding: 20px;
         }
         .modal-box {
-            background: rgba(14, 10, 28, 0.92); border: 1px solid var(--glass-border); border-radius: 24px;
+            background: rgba(14, 10, 28, 0.95); border: 1px solid var(--glass-border); border-radius: 24px;
             padding: 36px; width: 100%; max-width: 420px; box-shadow: 0 30px 90px rgba(0,0,0,0.8); position: relative;
         }
         .modal-box h2 { font-family: 'Outfit', sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 8px; }
@@ -180,46 +228,113 @@ $captchaTarget = $_SESSION['captcha_target'] ?? 1;
         }
     }
 }">
-    <div class="bg-aura"></div>
 
     <header class="header">
-        <div class="brand-logo">OkoStream Pro</div>
+        <img src="assets/okotunes%20logo.png" class="brand-logo-img" alt="OkoStream Logo" />
         <div style="display: flex; gap: 12px;">
-            <button class="nav-btn btn-ghost" style="cursor: default;" @click.prevent>Try Free</button>
+            <button class="nav-btn btn-ghost" style="cursor: default;" @click.prevent>Try Free →</button>
             <button class="nav-btn btn-accent" @click="showLoginModal = true">Sign In</button>
         </div>
     </header>
 
-    <main class="hero">
-        <div class="badge">Next-Gen Audio Infrastructure</div>
-        <h1>Pure Lossless Sound. <span>Master Quality Stream.</span></h1>
-        <p>Stream over 150 Million uncompressed 24-bit/192kHz Spatial Master tracks. Equipped with real-time AI stem separation, holographic Dolby soundstaging, and studio tube emulation.</p>
+    <!-- Hero Section -->
+    <section class="hero-banner">
+        <div class="hero-container">
+            <div>
+                <div class="serif-italic">No compression. Just flow.</div>
+                <h1 class="hero-title">Ready to Reclaim Your Audio?</h1>
+                <p class="hero-desc">Stream over 150 Million uncompressed 24-bit/192kHz Spatial Master tracks. Calibrated for audiophiles, producers, and sound engineers.</p>
+                <div style="display: flex; gap: 16px;">
+                    <button class="nav-btn btn-accent" style="padding: 16px 32px; font-size: 16px;" @click="showLoginModal = true">Start Master Stream</button>
+                </div>
+            </div>
+            <div class="hero-media-card">
+                <img src="assets/Red%20and%20Yellow%20Bold%20Modern%20Music%20Apps%20YouTube%20Display%20Ad.png" class="hero-img" alt="Hero Music App" />
+            </div>
+        </div>
+    </section>
 
-        <div class="hero-features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🎛️</div>
-                <h3>AI Real-Time Stem Isolator</h3>
-                <p>Isolate vocals, drums, bass, and synth tracks instantly on any song with live studio multitrack mixing.</p>
+    <!-- Trusted By Logos Cloud -->
+    <section class="trusted-section">
+        <div class="trusted-header">
+            <span class="trusted-title">Trusted by 10,000+ Studios & Sound Engineers</span>
+            <span style="font-size: 13px; color: #94A3B8;">Global Lossless Infrastructure</span>
+        </div>
+        <div class="trusted-grid">
+            <div class="trusted-pill"><span>⚡</span> Frame Blox</div>
+            <div class="trusted-pill"><span>⭕</span> Supa Blox</div>
+            <div class="trusted-pill"><span>⏳</span> Hype Blox</div>
+            <div class="trusted-pill"><span>🌓</span> Ultra Blox</div>
+            <div class="trusted-pill"><span>⏩</span> Ship Blox</div>
+            <div class="trusted-pill"><span>🎧</span> Dolby Atmos</div>
+            <div class="trusted-pill"><span>💎</span> FLAC Master</div>
+            <div class="trusted-pill"><span>🌐</span> Sony 360</div>
+        </div>
+    </section>
+
+    <!-- Bento Feature Section -->
+    <section class="bento-section">
+        <div class="bento-header">
+            <div class="serif-italic">Make Sound Work for You</div>
+            <h2>Stream smarter. Listen deeper. Hear everything.</h2>
+            <p>Our master streaming platform helps you isolate stems, eliminate compression, and stay in the flow zone with zero stress.</p>
+        </div>
+
+        <div class="bento-grid">
+            <!-- Bento 1: Large Neon Card -->
+            <div class="bento-card bento-card-neon">
+                <div>
+                    <h3 style="font-family: 'Outfit'; font-size: 26px; font-weight: 800; margin-bottom: 10px;">Stem Isolator & Real-Time Mixing</h3>
+                    <p style="font-size: 14px; opacity: 0.9; max-width: 280px;">Isolate vocals, drums, and bass in real-time with our neural multitrack audio DSP engine.</p>
+                </div>
+                <img src="assets/Red%20and%20Yellow%20Bold%20Modern%20Music%20Apps%20YouTube%20Display%20Ad.png" alt="Stem Isolator Mockup" />
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">🌌</div>
-                <h3>Holographic Dolby Atmos 3D</h3>
-                <p>Experience ultra-immersive binaural acoustic positioning calibrated for professional monitoring gear.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📼</div>
-                <h3>Analog Vinyl Tube Preamp</h3>
-                <p>Add rich harmonic warmth, subtle tape saturation, and vintage analog tube acoustic resonance on the fly.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📡</div>
-                <h3>Direct Lossless Cloud Vault</h3>
-                <p>Encrypted peer-to-peer audio buffer streaming with zero latency and studio FLAC master output.</p>
+
+            <!-- Bento 2: Monitor Graph Card -->
+            <div class="bento-card bento-card-glass">
+                <div>
+                    <h3 style="font-family: 'Outfit'; font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 8px;">Focus Bitrate Monitor</h3>
+                    <p style="font-size: 13px; color: var(--text-sub);">Real-time 24-bit/192kHz frequency spectrum graph with zero stream latency.</p>
+                </div>
+                <div class="monitor-graph">
+                    <div style="font-size: 12px; color: #00FF88; font-weight: 700;">FLAC MASTER STREAM • 9216 kbps</div>
+                    <div class="graph-line"></div>
+                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #94A3B8;">
+                        <span>20Hz</span><span>10kHz</span><span>44.1kHz</span><span>192kHz</span>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <div class="bento-grid-2">
+            <!-- Bento 3: Community Card -->
+            <div class="bento-card bento-card-dark">
+                <div>
+                    <h3 style="font-family: 'Outfit'; font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 8px;">Audiophile Cloud Sync</h3>
+                    <p style="font-size: 13px; color: var(--text-sub);">Connect your studio gear with seamless peer-to-peer cloud syncing.</p>
+                </div>
+                <div class="avatar-cluster">
+                    <img src="assets/splash_bg.jpg" class="avatar-img" />
+                    <img src="assets/album_placeholder.png" class="avatar-img" />
+                    <img src="assets/wallpaper%20background%20placeholder.png" class="avatar-img" />
+                </div>
+            </div>
+
+            <!-- Bento 4: Analog Tube Card -->
+            <div class="bento-card bento-card-purple">
+                <div style="position: relative; z-index: 2; max-width: 280px;">
+                    <h3 style="font-family: 'Outfit'; font-size: 24px; font-weight: 800; margin-bottom: 10px;">Analog Vinyl Tube Remaster</h3>
+                    <p style="font-size: 14px; opacity: 0.9;">Harmonic tube warmth, analog tape saturation, and vintage preamp acoustics on demand.</p>
+                </div>
+                <img src="assets/wallpaper%20background%20placeholder.png" alt="Analog Tube Background" />
+            </div>
+        </div>
+    </section>
+
+    <!-- Paywall Pricing Card -->
+    <div class="paywall-wrapper">
         <div class="paywall-card">
-            <div style="font-size: 12px; font-weight: 700; color: var(--accent-pink); text-transform: uppercase; letter-spacing: 1px;">Pro Master Tier</div>
+            <div style="font-size: 12px; font-weight: 700; color: var(--accent-pink); text-transform: uppercase; letter-spacing: 1.5px;">Pro Master Membership</div>
             <div class="price">$29.99 <span>/ month</span></div>
             <p style="font-size: 13px; color: var(--text-sub);">Full unrestricted access for studios, audiophiles & creators</p>
 
@@ -230,11 +345,11 @@ $captchaTarget = $_SESSION['captcha_target'] ?? 1;
                 <li>Unlimited P2P Satellite Lossless Cloud Vault</li>
             </ul>
 
-            <button class="nav-btn btn-accent" style="width: 100%; padding: 16px; font-size: 16px; font-weight: 700; border-radius: 16px;" @click="showLoginModal = true">
+            <button class="nav-btn btn-accent" style="width: 100%; padding: 18px; font-size: 16px; font-weight: 700; border-radius: 18px;" @click="showLoginModal = true">
                 Member Sign In
             </button>
         </div>
-    </main>
+    </div>
 
     <!-- Wall 1: Login Modal -->
     <div class="modal-overlay" x-show="showLoginModal" x-cloak style="display: none;">

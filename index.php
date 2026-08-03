@@ -199,13 +199,15 @@ if ($authStatus !== 'authenticated') {
             position: fixed;
             inset: 0;
             z-index: 0;
+            background-image: url('assets/wallpaper%20background%20placeholder.png');
             background-size: cover;
             background-position: center;
             filter: blur(20px) brightness(0.6);
             opacity: 0.95;
-            transition: background-image 0.8s ease;
+            transition: background-image 0.8s ease-in-out, opacity 0.8s ease-in-out;
             pointer-events: none;
         }
+
 
         .ambient-overlay {
             position: fixed;
@@ -1054,8 +1056,9 @@ if ($authStatus !== 'authenticated') {
     <div class="toast-pill" x-show="toastMsg" x-text="toastMsg" x-transition x-cloak></div>
 
     <!-- Crisp Dynamic Soft Blurred Artwork Wallpaper -->
-    <div class="ambient-mesh-bg" :style="current ? 'background-image:url(' + currentArt + ')' : ''"></div>
+    <div class="ambient-mesh-bg" :style="currentArt ? 'background-image:url(' + currentArt + ')' : 'background-image:url(assets/wallpaper%20background%20placeholder.png)'"></div>
     <div class="ambient-overlay"></div>
+
 
     <!-- ─────────────────────────────────────────────────────────────── -->
     <!-- 🖥️ DESKTOP WORKSTATION: MSPOT STUDIO PRO                        -->
