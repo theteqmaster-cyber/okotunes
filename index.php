@@ -113,6 +113,42 @@
             animation: spin 0.8s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── FAINT MINIMAL DELETE BUTTON ──────────────────────────── */
+        .track-del-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.22);
+            opacity: 0.3;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        .track-del-btn:hover {
+            color: #FF4D6D;
+            opacity: 1;
+            background: rgba(255, 0, 85, 0.12);
+        }
+        .delete-action-btn {
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            color: rgba(255, 255, 255, 0.35) !important;
+            opacity: 0.55;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        .delete-action-btn:hover {
+            background: rgba(255, 0, 85, 0.15) !important;
+            border-color: rgba(255, 0, 85, 0.35) !important;
+            color: #FF4D6D !important;
+            opacity: 1;
+        }
         .art-status-text { font-size: 0.88rem; color: var(--text-secondary); min-height: 20px; }
         .art-result-ok { color: #00FF88; font-weight: 600; font-size: 0.95rem; }
         .art-result-fail { color: rgba(255,100,100,0.9); font-size: 0.88rem; }
@@ -1043,7 +1079,12 @@
                                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                                 </svg>
                             </button>
-                            <button class="stage-action-btn" style="padding: 4px 8px; font-size: 0.85rem; background: rgba(255, 0, 85, 0.1); border-color: rgba(255, 0, 85, 0.25); color: #FF4D6D;" @click.stop="promptDeleteTrack(t)" title="Delete Track">🗑️</button>
+                            <button class="track-del-btn" @click.stop="promptDeleteTrack(t)" title="Delete Track">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 2 0 0 1-2 2H7a2 2 2 0 0 1-2-2V6m3 0V4a2 2 2 0 0 1 2-2h4a2 2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                            </button>
                         </div>
                     </li>
                 </template>
@@ -1076,7 +1117,13 @@
                         <button class="stage-action-btn" @click="downloadCurrentTrack()">⬇️ Download Track</button>
                         <button class="stage-action-btn" @click="showUploadModal = true">☁️ Upload Music</button>
                         <button class="stage-action-btn" @click="showCoverArtModal = true" title="Get Cover Art" style="padding: 10px 14px; font-size: 1.1rem; min-width: unset;">✨</button>
-                        <button class="stage-action-btn" style="background: rgba(255, 0, 85, 0.15); border-color: rgba(255, 0, 85, 0.35); color: #FF4D6D;" @click="promptDeleteTrack(current)" title="Delete Current Song">🗑️ Delete</button>
+                        <button class="stage-action-btn delete-action-btn" @click="promptDeleteTrack(current)" title="Delete Current Song">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 2 0 0 1-2 2H7a2 2 2 0 0 1-2-2V6m3 0V4a2 2 2 0 0 1 2-2h4a2 2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            <span>Delete</span>
+                        </button>
                     </div>
                 </div>
             </template>
@@ -1320,7 +1367,12 @@
         <div class="art-modal-card" style="max-width: 400px;">
             <template x-if="!isDeleting && trackToDelete">
                 <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
-                    <div class="art-modal-icon">🗑️</div>
+                    <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(255,0,85,0.12); border: 1px solid rgba(255,0,85,0.3); display: flex; align-items: center; justify-content: center; color: #FF4D6D;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 2 0 0 1-2 2H7a2 2 2 0 0 1-2-2V6m3 0V4a2 2 2 0 0 1 2-2h4a2 2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </div>
                     <h3 style="font-size: 1.2rem;">Delete Song?</h3>
                     <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
                         Are you sure you want to delete <strong style="color: #fff;" x-text="trackToDelete ? cleanTitle(trackToDelete.name) : ''"></strong>? This will permanently remove the song from your cloud library.
