@@ -7,10 +7,23 @@
  *       body: { "url": "stream.php?file=...", "name": "Track Name" }
  */
 
+require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/db.php';
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
+
+if (is_decoy()) {
+    echo json_encode(['success' => true, 'counts' => [], 'history' => []]);
+    exit;
+}
+
+if (!is_authenticated()) {
+    http_response_code(401);
+    echo json_encode(['error' => 'Unauthorized']);
+    exit;
+}
+
 
 $method = $_SERVER['REQUEST_METHOD'];
 

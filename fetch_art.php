@@ -8,8 +8,12 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
+require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/r2_storage.php';
+
+require_auth(true);
+
 
 $batchSize = isset($_GET['batch']) ? max(1, min(10, (int)$_GET['batch'])) : 4;
 $trackId   = $_GET['id'] ?? null;

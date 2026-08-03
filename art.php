@@ -4,8 +4,19 @@
  * Redirects to Cloudflare R2 artwork URL or extracts embedded ID3v2 APIC artwork.
  */
 
+require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/r2_storage.php';
+
+if (is_decoy() || !is_authenticated()) {
+    $fallback = __DIR__ . '/assets/splash_bg.jpg';
+    if (file_exists($fallback)) {
+        header('Content-Type: image/jpeg');
+        readfile($fallback);
+        exit;
+    }
+}
+
 
 $trackId  = $_GET['id'] ?? null;
 $filePath = $_GET['file'] ?? null;

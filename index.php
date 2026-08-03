@@ -1,6 +1,21 @@
-<?php // index.php - okotunes Studio Pro & Mobile ?>
+<?php // index.php - okotunes Studio Pro & Mobile
+require_once __DIR__ . '/auth.php';
+
+$authStatus = get_auth_status();
+
+if ($authStatus === 'decoy' || (isset($_GET['mode']) && $_GET['mode'] === 'pit' && $authStatus !== 'authenticated')) {
+    require __DIR__ . '/decoy.php';
+    exit;
+}
+
+if ($authStatus !== 'authenticated') {
+    require __DIR__ . '/landing.php';
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />

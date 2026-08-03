@@ -14,8 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/r2_storage.php';
+
+require_auth(true);
+
 
 $trackId = $_REQUEST['id'] ?? null;
 

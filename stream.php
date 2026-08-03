@@ -14,10 +14,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/r2_storage.php';
 
+// Decoy mode: return empty stream (infinite loading buffer)
+if (is_decoy() || str_starts_with($_GET['id'] ?? '', 'decoy_')) {
+    header('Content-Type: audio/mpeg');
+    header('Content-Length: 0');
+    http_response_code(200);
+    exit;
+}
+
+if (!is_authenticated()) {
+    http_response_code(403);
+    echo 'Forbidden: Authentication required to stream audio.';
+    exit;
+}
+
 $trackId  = $_GET['id'] ?? null;
+
 $filePath = $_GET['file'] ?? null;
 
 $r2 = getR2();
