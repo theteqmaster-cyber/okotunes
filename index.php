@@ -1670,6 +1670,40 @@ function okotunesApp() {
                 this.analyticsData = aData || {};
                 this.sortTracksByPlayCount();
                 this.filter();
+                this.triggerBatchArtFetcher();
+            });
+        },
+
+        triggerBatchArtFetcher() {
+            fetch('fetch_art.php?batch=4')
+                .then(r => r.json())
+                .then(data => {
+                    if (data && data.fetched > 0) {
+                        this.reloadTracksSilent();
+                    }
+                    if (data && data.remaining_pending > 0) {
+                        setTimeout(() => this.triggerBatchArtFetcher(), 1500);
+                    }
+                })
+                .catch(err => console.warn('Art fetcher notice:', err));
+        },
+
+        reloadTracksSilent() {
+            Promise.all([
+                fetch('api.php').then(r => r.json()),
+                fetch('stats.php').then(r => r.json()).catch(() => ({ counts: {} }))
+            ]).then(([tData, sData]) => {
+                this.tracks = tData.tracks || [];
+                this.statsCounts = sData.counts || {};
+                this.sortTracksByPlayCount();
+                this.filter();
+                if (this.current) {
+                    const match = this.tracks.find(t => t.id === this.current.id || t.url === this.current.url);
+                    if (match && match.artUrl && !match.artUrl.includes('art.php?id=')) {
+                        this.current.artUrl = match.artUrl;
+                        this.currentArt = match.artUrl;
+                    }
+                }
             });
         },
 

@@ -11,7 +11,7 @@ define('R2_DB_KEY', 'data/okotunes.sqlite');
 
 $g_dbNeedsSync = false;
 
-// Guarantee DB sync on script shutdown (handles abrupt exit / request end)
+// Guarantee DB sync on script shutdown
 register_shutdown_function(function() {
     global $g_dbNeedsSync;
     if ($g_dbNeedsSync) {
@@ -45,6 +45,7 @@ function getDb(): PDO {
             duration REAL DEFAULT 0,
             r2_key TEXT NOT NULL,
             art_r2_key TEXT DEFAULT '',
+            art_status TEXT DEFAULT 'pending',
             file_size INTEGER DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
@@ -56,12 +57,20 @@ function getDb(): PDO {
         );
     ");
 
+    // Auto-migrate schema if art_status column is missing
+    try {
+        $cols = $pdo->query("PRAGMA table_info(tracks)")->fetchAll();
+        $colNames = array_column($cols, 'name');
+        if (!in_array('art_status', $colNames)) {
+            $pdo->exec("ALTER TABLE tracks ADD COLUMN art_status TEXT DEFAULT 'pending'");
+        }
+    } catch (Exception $e) {
+        error_log("Migration notice: " . $e->getMessage());
+    }
+
     return $pdo;
 }
 
-/**
- * Downloads SQLite DB from Cloudflare R2 on container boot, or rebuilds from sidecar JSON files
- */
 function syncDbFromR2(): void {
     if (file_exists(LOCAL_DB_PATH) && filesize(LOCAL_DB_PATH) > 0) {
         return;
@@ -80,13 +89,9 @@ function syncDbFromR2(): void {
         return;
     }
 
-    // Self-Healing Fallback: Rebuild DB from R2 track sidecars if DB file missing/corrupted
     rebuildDbFromR2Sidecars();
 }
 
-/**
- * Self-healing scanner: Restores tracks directly from Cloudflare R2 sidecar files
- */
 function rebuildDbFromR2Sidecars(): void {
     $r2 = getR2();
     if (!$r2->isConfigured()) return;
@@ -108,6 +113,7 @@ function rebuildDbFromR2Sidecars(): void {
             duration REAL DEFAULT 0,
             r2_key TEXT NOT NULL,
             art_r2_key TEXT DEFAULT '',
+            art_status TEXT DEFAULT 'pending',
             file_size INTEGER DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
@@ -125,9 +131,12 @@ function rebuildDbFromR2Sidecars(): void {
             if ($raw) {
                 $data = json_decode($raw, true);
                 if (is_array($data) && isset($data['id'], $data['r2_key'])) {
+                    $artR2Key = $data['art_r2_key'] ?? '';
+                    $artStatus = !empty($artR2Key) ? 'fetched' : ($data['art_status'] ?? 'pending');
+
                     $stmt = $db->prepare("
-                        INSERT OR REPLACE INTO tracks (id, title, artist, album, duration, r2_key, art_r2_key, file_size)
-                        VALUES (:id, :title, :artist, :album, :duration, :r2_key, :art_r2_key, :file_size)
+                        INSERT OR REPLACE INTO tracks (id, title, artist, album, duration, r2_key, art_r2_key, art_status, file_size)
+                        VALUES (:id, :title, :artist, :album, :duration, :r2_key, :art_r2_key, :art_status, :file_size)
                     ");
                     $stmt->execute([
                         ':id'         => $data['id'],
@@ -136,7 +145,8 @@ function rebuildDbFromR2Sidecars(): void {
                         ':album'      => $data['album'] ?? 'Unknown Album',
                         ':duration'   => $data['duration'] ?? 0,
                         ':r2_key'     => $data['r2_key'],
-                        ':art_r2_key' => $data['art_r2_key'] ?? '',
+                        ':art_r2_key' => $artR2Key,
+                        ':art_status' => $artStatus,
                         ':file_size'  => $data['file_size'] ?? 0
                     ]);
                 }
@@ -145,9 +155,6 @@ function rebuildDbFromR2Sidecars(): void {
     }
 }
 
-/**
- * Syncs updated SQLite DB back to Cloudflare R2
- */
 function syncDbToR2(): void {
     global $g_dbNeedsSync;
     if (!file_exists(LOCAL_DB_PATH)) return;
@@ -169,7 +176,7 @@ function getStats(): array {
             $counts[$r['track_id']] = (int)$r['play_count'];
         }
 
-        $tracksStmt = $db->query("SELECT id, title, artist, album, duration, r2_key, art_r2_key FROM tracks ORDER BY title ASC");
+        $tracksStmt = $db->query("SELECT id, title, artist, album, duration, r2_key, art_r2_key, art_status FROM tracks ORDER BY title ASC");
         $tracks = $tracksStmt->fetchAll();
 
         return ['counts' => $counts, 'tracks' => $tracks];
@@ -205,9 +212,12 @@ function saveTrack(array $track): bool {
     global $g_dbNeedsSync;
     try {
         $db = getDb();
+        $artR2Key = $track['art_r2_key'] ?? '';
+        $artStatus = !empty($artR2Key) ? 'fetched' : ($track['art_status'] ?? 'pending');
+
         $stmt = $db->prepare("
-            INSERT OR REPLACE INTO tracks (id, title, artist, album, duration, r2_key, art_r2_key, file_size)
-            VALUES (:id, :title, :artist, :album, :duration, :r2_key, :art_r2_key, :file_size)
+            INSERT OR REPLACE INTO tracks (id, title, artist, album, duration, r2_key, art_r2_key, art_status, file_size)
+            VALUES (:id, :title, :artist, :album, :duration, :r2_key, :art_r2_key, :art_status, :file_size)
         ");
         $res = $stmt->execute([
             ':id'         => $track['id'],
@@ -216,7 +226,8 @@ function saveTrack(array $track): bool {
             ':album'      => $track['album'] ?? 'Unknown Album',
             ':duration'   => $track['duration'] ?? 0,
             ':r2_key'     => $track['r2_key'],
-            ':art_r2_key' => $track['art_r2_key'] ?? '',
+            ':art_r2_key' => $artR2Key,
+            ':art_status' => $artStatus,
             ':file_size'  => $track['file_size'] ?? 0,
         ]);
 
@@ -226,6 +237,57 @@ function saveTrack(array $track): bool {
         return $res;
     } catch (Exception $e) {
         error_log("DB saveTrack error: " . $e->getMessage());
+        return false;
+    }
+}
+
+/**
+ * Get batch of tracks pending artwork fetch (default batch limit: 4)
+ */
+function getPendingArtTracks(int $limit = 4): array {
+    try {
+        $db = getDb();
+        $stmt = $db->prepare("
+            SELECT id, title, artist, album, r2_key 
+            FROM tracks 
+            WHERE (art_r2_key IS NULL OR art_r2_key = '') 
+              AND (art_status IS NULL OR art_status = 'pending')
+            ORDER BY created_at DESC 
+            LIMIT :limit
+        ");
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    } catch (Exception $e) {
+        error_log("DB getPendingArtTracks error: " . $e->getMessage());
+        return [];
+    }
+}
+
+/**
+ * Update track art status and art R2 key
+ */
+function updateTrackArtStatus(string $id, string $status, string $artR2Key = ''): bool {
+    global $g_dbNeedsSync;
+    try {
+        $db = getDb();
+        $stmt = $db->prepare("
+            UPDATE tracks 
+            SET art_status = :status, art_r2_key = :art_key 
+            WHERE id = :id
+        ");
+        $res = $stmt->execute([
+            ':id'      => $id,
+            ':status'  => $status,
+            ':art_key' => $artR2Key
+        ]);
+
+        if ($res) {
+            $g_dbNeedsSync = true;
+        }
+        return $res;
+    } catch (Exception $e) {
+        error_log("DB updateTrackArtStatus error: " . $e->getMessage());
         return false;
     }
 }
