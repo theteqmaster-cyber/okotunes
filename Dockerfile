@@ -13,6 +13,13 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo_sqlite gd zip fileinfo \
     && rm -rf /var/lib/apt/lists/*
 
+# Increase PHP Upload and Memory Limits for Audio Files
+RUN echo "upload_max_filesize = 500M\n\
+post_max_size = 500M\n\
+memory_limit = 512M\n\
+max_execution_time = 600\n\
+max_input_time = 600" > /usr/local/etc/php/conf.d/uploads.ini
+
 # Enable Apache mod_rewrite & mod_headers
 RUN a2enmod rewrite headers
 

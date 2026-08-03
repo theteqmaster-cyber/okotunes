@@ -4,11 +4,20 @@
  * Uploads audio tracks directly to Cloudflare R2 or local volume and registers track in SQLite.
  */
 
+@ini_set('upload_max_filesize', '500M');
+@ini_set('post_max_size', '500M');
+@ini_set('memory_limit', '512M');
+@ini_set('max_execution_time', '600');
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 
-require_once __DIR__ . '/db.php';
-require_once __DIR__ . '/r2_storage.php';
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -16,19 +25,34 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-if (empty($_FILES['file'])) {
+// Handle payload exceeding post_max_size
+if (empty($_FILES) && empty($_POST) && isset($_SERVER['CONTENT_LENGTH']) && (int)$_SERVER['CONTENT_LENGTH'] > 0) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'No file uploaded or post size limit exceeded']);
+    echo json_encode(['success' => false, 'error' => 'File size exceeds server post limit (' . ini_get('post_max_size') . ')']);
     exit;
 }
+
+if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+    $errCode = $_FILES['file']['error'] ?? -1;
+    $errMsg = match($errCode) {
+        UPLOAD_ERR_INI_SIZE   => 'File exceeds upload_max_filesize limit (' . ini_get('upload_max_filesize') . ')',
+        UPLOAD_ERR_FORM_SIZE  => 'File exceeds MAX_FILE_SIZE limit',
+        UPLOAD_ERR_PARTIAL    => 'File was only partially uploaded',
+        UPLOAD_ERR_NO_FILE    => 'No file was uploaded',
+        UPLOAD_ERR_NO_TMP_DIR => 'Missing temporary upload folder on server',
+        UPLOAD_ERR_CANT_WRITE => 'Failed to write upload file to server disk',
+        UPLOAD_ERR_EXTENSION  => 'A PHP extension stopped the file upload',
+        default => 'File upload error code: ' . $errCode
+    };
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => $errMsg]);
+    exit;
+}
+
+require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/r2_storage.php';
 
 $file = $_FILES['file'];
-if ($file['error'] !== UPLOAD_ERR_OK) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'File upload failed with error code: ' . $file['error']]);
-    exit;
-}
-
 $allowedExt = ['mp3', 'flac', 'wav', 'ogg', 'aac', 'm4a', 'opus', 'mp4', 'wma'];
 $originalName = basename($file['name']);
 $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
@@ -58,7 +82,7 @@ if ($r2->isConfigured()) {
     $r2Uploaded = $r2->uploadObject($r2Key, $file['tmp_name'], $mimeType);
 }
 
-// Fallback: save to local volume if R2 is not enabled yet
+// Fallback: save to local volume if R2 is not enabled
 if (!$r2Uploaded) {
     $targetDir = __DIR__ . '/data/uploads';
     if (!is_dir($targetDir)) {
@@ -73,7 +97,6 @@ if (!$r2Uploaded) {
     $r2Key = $trackId . '.' . $ext;
 }
 
-// Save track record in SQLite
 $trackData = [
     'id'         => $trackId,
     'title'      => $cleanTitle,
