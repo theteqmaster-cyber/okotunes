@@ -1269,7 +1269,7 @@
     </div>
 
     <!-- Hidden audio element -->
-    <audio id="audio-el" x-ref="audio" preload="metadata"></audio>
+    <audio id="audio-el" x-ref="audio" crossorigin="anonymous" preload="metadata"></audio>
 </div>
 
 <script>

@@ -1,8 +1,18 @@
 <?php
 /**
- * stream.php - Audio streaming handler for okotunes.
- * Redirects to Cloudflare R2 CDN or streams local audio files with HTTP Range support.
+ * stream.php - Audio streaming & CORS proxy handler for okotunes.
+ * Streams audio from Cloudflare R2 or local storage with full CORS & HTTP Range support.
  */
+
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, HEAD, OPTIONS');
+header('Access-Control-Allow-Headers: Range, Content-Type, Authorization, Origin, Accept');
+header('Access-Control-Expose-Headers: Content-Length, Content-Range, Accept-Ranges, Content-Type');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/r2_storage.php';
@@ -11,27 +21,68 @@ $trackId  = $_GET['id'] ?? null;
 $filePath = $_GET['file'] ?? null;
 
 $r2 = getR2();
+$r2Key = null;
 
 if ($trackId) {
     $db = getDb();
-    $stmt = $db->prepare("SELECT * FROM tracks WHERE id = :id");
+    $stmt = $db->prepare("SELECT r2_key FROM tracks WHERE id = :id");
     $stmt->execute([':id' => $trackId]);
-    $track = $stmt->fetch();
-
-    if ($track && !empty($track['r2_key'])) {
-        $r2Url = $r2->getUrl($track['r2_key']);
-        header("Location: " . $r2Url, true, 302);
-        exit;
+    $row = $stmt->fetch();
+    if ($row && !empty($row['r2_key'])) {
+        $r2Key = $row['r2_key'];
     }
+} elseif ($filePath) {
+    $r2Key = ltrim(rawurldecode($filePath), '/\\');
 }
 
-if (!$filePath && !$trackId) {
+if (!$r2Key && !$filePath && !$trackId) {
     http_response_code(400);
     echo 'Missing track ID or file parameter';
     exit;
 }
 
-$targetFile = $filePath ?: $trackId;
+// 1. Stream from Cloudflare R2 if configured
+if ($r2Key && $r2->isConfigured()) {
+    $r2Url = $r2->getUrl($r2Key);
+
+    $opts = [
+        'http' => [
+            'method' => 'GET',
+            'header' => 'User-Agent: okotunes-Stream-Proxy/1.0'
+        ]
+    ];
+
+    if (isset($_SERVER['HTTP_RANGE'])) {
+        $opts['http']['header'] .= "\r\nRange: " . $_SERVER['HTTP_RANGE'];
+    }
+
+    $context = stream_context_create($opts);
+    $stream = @fopen($r2Url, 'rb', false, $context);
+
+    if ($stream !== false) {
+        // Forward HTTP response status and relevant headers from R2
+        if (isset($http_response_header)) {
+            foreach ($http_response_header as $header) {
+                if (preg_match('{^HTTP/\S+\s+(\d+)}', $header, $matches)) {
+                    http_response_code(intval($matches[1]));
+                } elseif (preg_match('{^(Content-Type|Content-Length|Content-Range|Accept-Ranges):}i', $header)) {
+                    header($header);
+                }
+            }
+        }
+
+        if (isset($_GET['download'])) {
+            header('Content-Disposition: attachment; filename="' . basename($r2Key) . '"');
+        }
+
+        fpassthru($stream);
+        fclose($stream);
+        exit;
+    }
+}
+
+// 2. Fallback: Stream from local storage if file exists locally
+$targetFile = $r2Key ?: ($filePath ?: $trackId);
 $requested  = ltrim(rawurldecode($targetFile), '/\\');
 
 if (strpos($requested, '../') !== false || strpos($requested, '..\\') !== false) {
@@ -61,7 +112,6 @@ $mimeTypes = [
     'wma'  => 'audio/x-ms-wma'
 ];
 $mime = $mimeTypes[$extension] ?? 'application/octet-stream';
-
 $fileSize = filesize($localPath);
 
 header('Content-Type: ' . $mime);
@@ -71,7 +121,6 @@ if (isset($_GET['download'])) {
     header('Content-Disposition: attachment; filename="' . basename($localPath) . '"');
 }
 
-// HTTP Range Requests for Seeking
 if (isset($_SERVER['HTTP_RANGE'])) {
     list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
     list($start, $end) = explode('-', $range, 2);
@@ -84,23 +133,20 @@ if (isset($_SERVER['HTTP_RANGE'])) {
     header('Content-Length: ' . $length);
 
     $fh = fopen($localPath, 'rb');
-    if ($fh === false) {
-        http_response_code(500);
-        echo 'Failed to open media stream';
+    if ($fh !== false) {
+        fseek($fh, $start);
+        $chunkSize = 1024 * 256;
+        $remaining = $length;
+        while ($remaining > 0 && !feof($fh)) {
+            if (connection_aborted()) break;
+            $toRead = min($chunkSize, $remaining);
+            $data   = fread($fh, $toRead);
+            echo $data;
+            $remaining -= strlen($data);
+        }
+        fclose($fh);
         exit;
     }
-    fseek($fh, $start);
-    $chunkSize = 1024 * 256;
-    $remaining = $length;
-    while ($remaining > 0 && !feof($fh)) {
-        if (connection_aborted()) break;
-        $toRead = min($chunkSize, $remaining);
-        $data   = fread($fh, $toRead);
-        echo $data;
-        $remaining -= strlen($data);
-    }
-    fclose($fh);
-    exit;
 }
 
 header('Content-Length: ' . $fileSize);

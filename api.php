@@ -1,7 +1,7 @@
 <?php
 /**
  * api.php - Returns JSON track library for okotunes.
- * Reads tracks from SQLite database and resolves Cloudflare R2 URLs.
+ * Reads tracks from SQLite database and resolves CORS-enabled stream URLs.
  */
 
 header('Content-Type: application/json');
@@ -21,8 +21,8 @@ try {
         $r2Key   = $track['r2_key'];
         $artKey  = $track['art_r2_key'] ?? '';
 
-        // Resolve R2 URL or fallback stream URL
-        $streamUrl = !empty($r2Key) ? $r2->getUrl($r2Key) : "stream.php?id=" . rawurlencode($trackId);
+        // Serve stream through stream.php proxy to enforce Access-Control-Allow-Origin: * for Web Audio API
+        $streamUrl = "stream.php?id=" . rawurlencode($trackId);
         $artUrl    = !empty($artKey) ? $r2->getUrl($artKey) : "art.php?id=" . rawurlencode($trackId);
 
         $files[] = [
