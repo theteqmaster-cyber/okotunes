@@ -1037,11 +1037,14 @@
                                 <span style="font-size: 0.72rem; color: var(--accent-cyan); font-weight: 600;" x-show="statsCounts[t.url]" x-text="(statsCounts[t.url] || 0) + ' plays'"></span>
                             </div>
                         </div>
-                        <button class="like-btn" @click.stop="toggleLike(t.url)" title="Like Track">
-                            <svg viewBox="0 0 24 24" :class="{liked: isLiked(t.url)}">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                            </svg>
-                        </button>
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <button class="like-btn" @click.stop="toggleLike(t.url)" title="Like Track">
+                                <svg viewBox="0 0 24 24" :class="{liked: isLiked(t.url)}">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                </svg>
+                            </button>
+                            <button class="stage-action-btn" style="padding: 4px 8px; font-size: 0.85rem; background: rgba(255, 0, 85, 0.1); border-color: rgba(255, 0, 85, 0.25); color: #FF4D6D;" @click.stop="promptDeleteTrack(t)" title="Delete Track">🗑️</button>
+                        </div>
                     </li>
                 </template>
             </ul>
@@ -1073,6 +1076,7 @@
                         <button class="stage-action-btn" @click="downloadCurrentTrack()">⬇️ Download Track</button>
                         <button class="stage-action-btn" @click="showUploadModal = true">☁️ Upload Music</button>
                         <button class="stage-action-btn" @click="showCoverArtModal = true" title="Get Cover Art" style="padding: 10px 14px; font-size: 1.1rem; min-width: unset;">✨</button>
+                        <button class="stage-action-btn" style="background: rgba(255, 0, 85, 0.15); border-color: rgba(255, 0, 85, 0.35); color: #FF4D6D;" @click="promptDeleteTrack(current)" title="Delete Current Song">🗑️ Delete</button>
                     </div>
                 </div>
             </template>
@@ -1306,6 +1310,31 @@
                     <div style="font-size:2.4rem">😕</div>
                     <p class="art-result-fail" x-text="coverArtMsg"></p>
                     <button class="art-btn-cancel" @click="showCoverArtModal = false; coverArtState = 'idle';">Close</button>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <!-- ── DELETE CONFIRMATION MODAL ────────────────────────────────────── -->
+    <div class="art-modal-overlay" x-show="showDeleteModal" x-cloak @click.self="if(!isDeleting) { showDeleteModal = false; trackToDelete = null; }">
+        <div class="art-modal-card" style="max-width: 400px;">
+            <template x-if="!isDeleting && trackToDelete">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+                    <div class="art-modal-icon">🗑️</div>
+                    <h3 style="font-size: 1.2rem;">Delete Song?</h3>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+                        Are you sure you want to delete <strong style="color: #fff;" x-text="trackToDelete ? cleanTitle(trackToDelete.name) : ''"></strong>? This will permanently remove the song from your cloud library.
+                    </p>
+                    <div class="art-modal-actions" style="margin-top: 8px;">
+                        <button class="art-btn-cancel" @click="showDeleteModal = false; trackToDelete = null;">Cancel</button>
+                        <button class="art-btn-go" style="background: linear-gradient(135deg, #FF0055, #D32F2F); font-weight: 700;" @click="confirmDeleteTrack()">Yes, Delete</button>
+                    </div>
+                </div>
+            </template>
+            <template x-if="isDeleting">
+                <div class="art-spinner-wrap">
+                    <div class="art-spinner" style="border-top-color: #FF0055;"></div>
+                    <p class="art-status-text">Deleting song from cloud storage...</p>
                 </div>
             </template>
         </div>
@@ -1691,6 +1720,46 @@ function okotunesApp() {
         showCoverArtModal: false,
         coverArtState: 'idle', // idle | fetching | done | error
         coverArtMsg: '',
+        showDeleteModal: false,
+        trackToDelete: null,
+        isDeleting: false,
+
+        promptDeleteTrack(track) {
+            if (!track) return;
+            this.trackToDelete = track;
+            this.showDeleteModal = true;
+        },
+
+        async confirmDeleteTrack() {
+            if (!this.trackToDelete) return;
+            this.isDeleting = true;
+            const targetId = this.trackToDelete.id;
+            const targetUrl = this.trackToDelete.url;
+
+            try {
+                const res = await fetch('delete.php?id=' + encodeURIComponent(targetId), { method: 'POST' });
+                const data = await res.json();
+
+                if (data.success) {
+                    if (this.current && (this.current.id === targetId || this.current.url === targetUrl)) {
+                        this.$refs.audio.pause();
+                        this.isPlaying = false;
+                        this.current = null;
+                    }
+                    this.tracks = this.tracks.filter(t => t.id !== targetId && t.url !== targetUrl);
+                    this.filter();
+                    this.showToast('Song deleted');
+                } else {
+                    this.showToast(data.error || 'Failed deleting song');
+                }
+            } catch (e) {
+                this.showToast('Network error deleting song');
+            } finally {
+                this.isDeleting = false;
+                this.showDeleteModal = false;
+                this.trackToDelete = null;
+            }
+        },
 
         get spatialModeLabel() {
             const found = this.spatialPresets.find(p => p.id === this.spatialMode);

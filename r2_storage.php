@@ -206,6 +206,84 @@ class R2Storage {
     }
 
     /**
+     * Delete object from Cloudflare R2 bucket
+     */
+    public function deleteObject(string $key): bool {
+        if (!$this->isConfigured()) return false;
+
+        $key = $this->sanitizeKey($key);
+        $region  = 'auto';
+        $service = 's3';
+        $host    = "{$this->accountId}.r2.cloudflarestorage.com";
+        $encodedKey = implode('/', array_map('rawurlencode', explode('/', $key)));
+        $path    = '/' . rawurlencode($this->bucket) . '/' . $encodedKey;
+        $url     = "https://{$host}" . $path;
+
+        $payloadHash = hash('sha256', '');
+        $now = time();
+        $amzDate = gmdate('Ymd\THis\Z', $now);
+        $dateStamp = gmdate('Ymd', $now);
+
+        $credentialScope = "{$dateStamp}/{$region}/{$service}/aws4_request";
+
+        $headers = [
+            'host'                 => $host,
+            'x-amz-content-sha256' => $payloadHash,
+            'x-amz-date'           => $amzDate
+        ];
+
+        ksort($headers);
+        $canonicalHeaders = "";
+        $signedHeaders = implode(';', array_keys($headers));
+        foreach ($headers as $k => $v) {
+            $canonicalHeaders .= "{$k}:{$v}\n";
+        }
+
+        $canonicalRequest = "DELETE\n{$path}\n\n{$canonicalHeaders}\n{$signedHeaders}\n{$payloadHash}";
+        $stringToSign = "AWS4-HMAC-SHA256\n{$amzDate}\n{$credentialScope}\n" . hash('sha256', $canonicalRequest);
+
+        $kDate    = hash_hmac('sha256', $dateStamp, 'AWS4' . $this->secretKey, true);
+        $kRegion  = hash_hmac('sha256', $region, $kDate, true);
+        $kService = hash_hmac('sha256', $service, $kRegion, true);
+        $kSigning = hash_hmac('sha256', 'aws4_request', $kService, true);
+
+        $signature = hash_hmac('sha256', $stringToSign, $kSigning);
+        $authHeader = "AWS4-HMAC-SHA256 Credential={$this->accessKey}/{$credentialScope}, SignedHeaders={$signedHeaders}, Signature={$signature}";
+
+        if (function_exists('curl_init')) {
+            $ch = curl_init($url);
+            curl_setopt_array($ch, [
+                CURLOPT_CUSTOMREQUEST  => 'DELETE',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HTTPHEADER     => [
+                    "Host: {$host}",
+                    "x-amz-date: {$amzDate}",
+                    "x-amz-content-sha256: {$payloadHash}",
+                    "Authorization: {$authHeader}"
+                ]
+            ]);
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            return ($httpCode >= 200 && $httpCode < 300) || $httpCode === 404;
+        } else {
+            $opts = [
+                'http' => [
+                    'method'  => 'DELETE',
+                    'header'  => "Host: {$host}\r\n" .
+                                 "x-amz-date: {$amzDate}\r\n" .
+                                 "x-amz-content-sha256: {$payloadHash}\r\n" .
+                                 "Authorization: {$authHeader}\r\n",
+                    'ignore_errors' => true
+                ]
+            ];
+            $context = stream_context_create($opts);
+            @file_get_contents($url, false, $context);
+            return true;
+        }
+    }
+
+    /**
      * List objects in R2 bucket under a prefix
      */
     public function listObjects(string $subPrefix = ''): array {
