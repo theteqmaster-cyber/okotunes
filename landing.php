@@ -1,7 +1,7 @@
 <?php
 /**
  * landing.php - Wall 1 (Commercial Paywall Landing Page) & Wall 2 (Interactive CAPTCHA Challenge).
- * Inspired by modern high-converting bento layouts with vibrant neon gradients & sleek typography.
+ * Inspired by modern high-converting bento layouts with crisp wallpaper background and sleek typography.
  */
 $pendingChallenge = (get_auth_status() === 'pending_challenge');
 $captchaTarget = $_SESSION['captcha_target'] ?? 1;
@@ -49,23 +49,19 @@ $captchaTarget = $_SESSION['captcha_target'] ?? 1;
         }
         .btn-accent:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(255,0,127,0.5); }
 
-        /* Hero Section (Gradient Banner) */
+        /* Hero Section (Wallpaper Image Background) */
         .hero-banner {
-            position: relative; padding: 80px 40px 100px;
-            background: radial-gradient(circle at 70% 30%, rgba(255, 184, 0, 0.25) 0%, rgba(255, 0, 127, 0.35) 40%, rgba(121, 40, 202, 0.45) 70%, transparent 100%);
-            border-bottom: 1px solid var(--glass-border); overflow: hidden;
+            position: relative; padding: 110px 40px 130px;
+            background: linear-gradient(to bottom, rgba(5, 3, 10, 0.45), rgba(7, 5, 18, 0.85)),
+                        url('assets/wall%201%20hero.png') center/cover no-repeat;
+            border-bottom: 1px solid var(--glass-border); overflow: hidden; text-align: center;
         }
-        .hero-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center; }
-        
-        .serif-italic { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 1.8rem; color: rgba(255,255,255,0.85); margin-bottom: 8px; }
-        .hero-title { font-family: 'Outfit', sans-serif; font-size: clamp(2.8rem, 5.5vw, 4.8rem); font-weight: 800; line-height: 1.08; letter-spacing: -1.5px; margin-bottom: 24px; }
-        .hero-desc { font-size: 1.15rem; color: rgba(255,255,255,0.8); line-height: 1.6; max-width: 540px; margin-bottom: 32px; }
 
-        .hero-media-card {
-            position: relative; border-radius: 28px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.15);
-            background: linear-gradient(135deg, rgba(255,0,127,0.2), rgba(121,40,202,0.2)); backdrop-filter: blur(20px);
-        }
-        .hero-img { width: 100%; height: auto; display: block; object-fit: cover; }
+        .hero-container { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+        
+        .serif-italic { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 2.2rem; color: rgba(255,255,255,0.9); margin-bottom: 10px; }
+        .hero-title { font-family: 'Outfit', sans-serif; font-size: clamp(3rem, 6vw, 5.2rem); font-weight: 800; line-height: 1.08; letter-spacing: -1.5px; margin-bottom: 24px; }
+        .hero-desc { font-size: 1.25rem; color: rgba(255,255,255,0.85); line-height: 1.6; max-width: 680px; margin-bottom: 36px; }
 
         /* Trusted By Section (White Pill Cloud) */
         .trusted-section { background: #FFFFFF; color: var(--text-dark); padding: 60px 40px; text-align: center; }
@@ -97,17 +93,17 @@ $captchaTarget = $_SESSION['captcha_target'] ?? 1;
 
         /* Bento 1: Large Neon Card */
         .bento-card-neon {
-            background: linear-gradient(135deg, #FFB800 0%, #FF007F 50%, #7928CA 100%);
+            background: linear-gradient(135deg, rgba(255, 184, 0, 0.2), rgba(255, 0, 127, 0.4), rgba(121, 40, 202, 0.6)),
+                        url('assets/wallpaper%20background%20placeholder.png') center/cover no-repeat;
             color: #FFF; min-height: 380px;
         }
-        .bento-card-neon img { width: 65%; position: absolute; right: -20px; bottom: -20px; border-radius: 20px 0 0 0; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
 
         /* Bento 2: Light Glass Card */
         .bento-card-glass {
             background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); min-height: 380px;
         }
         .monitor-graph {
-            width: 100%; height: 160px; background: rgba(0, 0, 0, 0.3); border-radius: 18px; border: 1px solid rgba(255,255,255,0.1);
+            width: 100%; height: 160px; background: rgba(0, 0, 0, 0.35); border-radius: 18px; border: 1px solid rgba(255,255,255,0.1);
             padding: 20px; margin-top: 20px; display: flex; flex-direction: column; justify-content: space-between;
         }
         .graph-line { height: 4px; background: linear-gradient(90deg, #00FF88, #00F2FE); border-radius: 2px; width: 85%; animation: pulse 2s ease infinite alternate; }
@@ -117,13 +113,14 @@ $captchaTarget = $_SESSION['captcha_target'] ?? 1;
         
         .bento-card-dark { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); min-height: 340px; }
         .avatar-cluster { display: flex; gap: -10px; margin-top: 20px; }
-        .avatar-img { width: 44px; height: 44px; border-radius: 50%; border: 3px solid #070512; margin-left: -12px; }
+        .avatar-img { width: 44px; height: 44px; border-radius: 50%; border: 3px solid #070512; margin-left: -12px; object-fit: cover; }
         .avatar-img:first-child { margin-left: 0; }
 
         .bento-card-purple {
-            background: linear-gradient(135deg, #7928CA 0%, #240046 100%); min-height: 340px; color: #FFF; position: relative;
+            background: linear-gradient(135deg, rgba(121, 40, 202, 0.6), rgba(36, 0, 70, 0.8)),
+                        url('assets/wallpaper%20background%20placeholder.png') center/cover no-repeat;
+            min-height: 340px; color: #FFF; position: relative;
         }
-        .bento-card-purple img { position: absolute; right: 0; bottom: 0; height: 100%; width: 55%; object-fit: cover; opacity: 0.85; mask-image: linear-gradient(to left, rgba(0,0,0,1), transparent); }
 
         /* Pricing Paywall Card */
         .paywall-wrapper { max-width: 540px; margin: 90px auto; padding: 0 20px; text-align: center; }
@@ -237,19 +234,14 @@ $captchaTarget = $_SESSION['captcha_target'] ?? 1;
         </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero Section with Asset Wallpaper Background -->
     <section class="hero-banner">
         <div class="hero-container">
-            <div>
-                <div class="serif-italic">No compression. Just flow.</div>
-                <h1 class="hero-title">Ready to Reclaim Your Audio?</h1>
-                <p class="hero-desc">Stream over 150 Million uncompressed 24-bit/192kHz Spatial Master tracks. Calibrated for audiophiles, producers, and sound engineers.</p>
-                <div style="display: flex; gap: 16px;">
-                    <button class="nav-btn btn-accent" style="padding: 16px 32px; font-size: 16px;" @click="showLoginModal = true">Start Master Stream</button>
-                </div>
-            </div>
-            <div class="hero-media-card">
-                <img src="assets/Red%20and%20Yellow%20Bold%20Modern%20Music%20Apps%20YouTube%20Display%20Ad.png" class="hero-img" alt="Hero Music App" />
+            <div class="serif-italic">No compression. Just flow.</div>
+            <h1 class="hero-title">Ready to Reclaim Your Audio?</h1>
+            <p class="hero-desc">Stream over 150 Million uncompressed 24-bit/192kHz Spatial Master tracks. Calibrated for audiophiles, producers, and sound engineers.</p>
+            <div style="display: flex; gap: 16px;">
+                <button class="nav-btn btn-accent" style="padding: 18px 40px; font-size: 17px; font-weight: 700; border-radius: 36px;" @click="showLoginModal = true">Start Master Stream</button>
             </div>
         </div>
     </section>
@@ -283,11 +275,10 @@ $captchaTarget = $_SESSION['captcha_target'] ?? 1;
         <div class="bento-grid">
             <!-- Bento 1: Large Neon Card -->
             <div class="bento-card bento-card-neon">
-                <div>
-                    <h3 style="font-family: 'Outfit'; font-size: 26px; font-weight: 800; margin-bottom: 10px;">Stem Isolator & Real-Time Mixing</h3>
-                    <p style="font-size: 14px; opacity: 0.9; max-width: 280px;">Isolate vocals, drums, and bass in real-time with our neural multitrack audio DSP engine.</p>
+                <div style="position: relative; z-index: 2; max-width: 320px;">
+                    <h3 style="font-family: 'Outfit'; font-size: 28px; font-weight: 800; margin-bottom: 12px;">Stem Isolator & Real-Time Mixing</h3>
+                    <p style="font-size: 15px; opacity: 0.95; line-height: 1.5;">Isolate vocals, drums, and bass in real-time with our neural multitrack audio DSP engine.</p>
                 </div>
-                <img src="assets/Red%20and%20Yellow%20Bold%20Modern%20Music%20Apps%20YouTube%20Display%20Ad.png" alt="Stem Isolator Mockup" />
             </div>
 
             <!-- Bento 2: Monitor Graph Card -->
@@ -315,18 +306,17 @@ $captchaTarget = $_SESSION['captcha_target'] ?? 1;
                 </div>
                 <div class="avatar-cluster">
                     <img src="assets/splash_bg.jpg" class="avatar-img" />
-                    <img src="assets/album_placeholder.png" class="avatar-img" />
+                    <img src="assets/album%20art%20new%20place%20holder.png" class="avatar-img" />
                     <img src="assets/wallpaper%20background%20placeholder.png" class="avatar-img" />
                 </div>
             </div>
 
             <!-- Bento 4: Analog Tube Card -->
             <div class="bento-card bento-card-purple">
-                <div style="position: relative; z-index: 2; max-width: 280px;">
-                    <h3 style="font-family: 'Outfit'; font-size: 24px; font-weight: 800; margin-bottom: 10px;">Analog Vinyl Tube Remaster</h3>
-                    <p style="font-size: 14px; opacity: 0.9;">Harmonic tube warmth, analog tape saturation, and vintage preamp acoustics on demand.</p>
+                <div style="position: relative; z-index: 2; max-width: 320px;">
+                    <h3 style="font-family: 'Outfit'; font-size: 26px; font-weight: 800; margin-bottom: 12px;">Analog Vinyl Tube Remaster</h3>
+                    <p style="font-size: 15px; opacity: 0.95; line-height: 1.5;">Harmonic tube warmth, analog tape saturation, and vintage preamp acoustics on demand.</p>
                 </div>
-                <img src="assets/wallpaper%20background%20placeholder.png" alt="Analog Tube Background" />
             </div>
         </div>
     </section>
