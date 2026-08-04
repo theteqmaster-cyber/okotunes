@@ -598,26 +598,25 @@ if ($authStatus !== 'authenticated') {
             }
 
             .history-card {
-                align-items: center;
-                gap: 10px;
-                cursor: pointer;
-                transition: all 0.25s ease;
-                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-            }
-
-                border-radius: 12px;
-                padding: 8px 10px;
+                background: rgba(255, 255, 255, 0.03);
+                backdrop-filter: blur(20px) saturate(1.8);
+                -webkit-backdrop-filter: blur(20px) saturate(1.8);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                border-radius: 16px;
+                padding: 10px 12px;
                 display: flex;
                 align-items: center;
                 gap: 10px;
                 cursor: pointer;
-                transition: all 0.2s ease;
+                transition: all 0.25s ease;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
             }
 
             .history-card:hover {
-                background: var(--bg-card-hover);
-                border-color: rgba(255, 0, 127, 0.3);
-                transform: translateX(3px);
+                background: rgba(255, 255, 255, 0.07);
+                border-color: rgba(255, 0, 127, 0.35);
+                transform: translateX(4px) translateY(-2px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
             }
 
             .history-art {
@@ -628,7 +627,7 @@ if ($authStatus !== 'authenticated') {
                 background: linear-gradient(135deg, #1E1B4B 0%, #31103F 100%);
             }
 
-            /* Fixed Bottom Player Control Bar */
+            /* Fixed Bottom Player Control Bar (Desktop Only) */
             .studio-player {
                 grid-area: player;
                 position: fixed;
@@ -636,26 +635,28 @@ if ($authStatus !== 'authenticated') {
                 left: 0;
                 right: 0;
                 height: 82px;
-                background: rgba(10, 14, 26, 0.92);
-                backdrop-filter: blur(20px);
-                border-top: 1px solid var(--border-color);
+                background: rgba(8, 6, 18, 0.85);
+                backdrop-filter: blur(28px) saturate(1.8);
+                -webkit-backdrop-filter: blur(28px) saturate(1.8);
+                border-top: 1px solid rgba(255, 255, 255, 0.06);
                 display: grid;
                 grid-template-columns: 300px 1fr 260px;
                 align-items: center;
                 padding: 0 32px;
                 gap: 20px;
                 z-index: 100;
-                box-shadow: 0 -10px 30px rgba(0,0,0,0.6);
+                box-shadow: 0 -12px 40px rgba(0,0,0,0.5);
             }
 
             #mobile-app { display: none !important; }
         }
 
         /* ───────────────────────────────────────────────────────────── */
-        /* 📱 MOBILE MODE: MSPOT GO (max-width: 1024px)                  */
+        /* 📱 MOBILE MODE: OKOTUNES GO (max-width: 1024px)               */
         /* ───────────────────────────────────────────────────────────── */
         @media (max-width: 1024px) {
-            #studio-app { display: none !important; }
+            #studio-app, .studio-player { display: none !important; }
+
 
             #mobile-app {
                 display: flex;
@@ -1270,10 +1271,13 @@ if ($authStatus !== 'authenticated') {
                 <a href="/index.php" style="color: var(--text-secondary); display: flex; align-items: center; text-decoration: none;" title="Gateway Home">
                     <svg style="width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2;" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 </a>
-                <span style="font-weight: 800; color: var(--accent-pink);">MSpot Go</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <img src="assets/okotunes%20logo.png" alt="Logo" style="height: 26px; border-radius: 6px; object-fit: contain;" />
+                    <span style="font-weight: 800; color: var(--accent-pink);">okotunes Go</span>
+                </div>
             </div>
             <div style="display: flex; align-items: center; gap: 8px;">
-                <input type="text" placeholder="Search 2,970+..." x-model="query" @input="filter()" style="background: rgba(255,255,255,0.1); border:1px solid var(--border-color); border-radius: 14px; padding: 6px 12px; color:#FFF; width: 120px; font-size: 0.8rem; outline:none;" />
+                <input type="text" placeholder="Search 2,970+..." x-model="query" @input="filter()" style="background: rgba(255,255,255,0.06); backdrop-filter: blur(12px); border:1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 6px 12px; color:#FFF; width: 120px; font-size: 0.8rem; outline:none;" />
                 <button @click="showUploadModal = true" style="background: rgba(255, 0, 127, 0.2); border: 1px solid var(--accent-pink); color: #FFF; border-radius: 14px; padding: 6px 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Upload Music">
                     <svg style="width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2;" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 </button>
@@ -1285,7 +1289,7 @@ if ($authStatus !== 'authenticated') {
             <div class="go-player-card" x-show="mobileTab === 'player'"
                  @touchstart="handleTouchStart($event)" @touchend="handleTouchEnd($event)">
                 
-                <img class="go-hero-art" :src="currentArt" @error="$el.onerror=null; $el.src='assets/album_placeholder.png'" alt="Cover" />
+                <img class="go-hero-art" :src="currentArt" @error="$el.onerror=null; $el.src='assets/album%20art%20new%20place%20holder.png'" alt="Cover" />
                 
                 <div class="go-track-name" x-text="cleanTitle(current ? current.name : 'Pick a song')"></div>
 
@@ -1322,8 +1326,8 @@ if ($authStatus !== 'authenticated') {
             <!-- Mobile Tab 1: Library View -->
             <div x-show="mobileTab === 'library'" style="padding: 14px 14px 80px 14px;">
                 <template x-for="(t, i) in filtered" :key="t.url">
-                    <div style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: rgba(255,255,255,0.04); border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border-color);" @click="play(i)">
-                        <img :src="t.artUrl || 'assets/album_placeholder.png'" @error="$el.onerror=null; $el.src='assets/album_placeholder.png'" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover;" />
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 16px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 8px 24px rgba(0,0,0,0.2);" @click="play(i)">
+                        <img :src="t.artUrl || 'assets/album%20art%20new%20place%20holder.png'" @error="$el.onerror=null; $el.src='assets/album%20art%20new%20place%20holder.png'" style="width: 44px; height: 44px; border-radius: 10px; object-fit: cover;" />
                         <div style="flex: 1; overflow: hidden;">
                             <div style="font-weight: 600; font-size: 0.88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" x-text="cleanTitle(t.name)"></div>
                             <div style="display: flex; gap: 6px; align-items: center; margin-top: 2px;">
@@ -1344,8 +1348,8 @@ if ($authStatus !== 'authenticated') {
             <div x-show="mobileTab === 'recent'" style="padding: 14px 14px 80px 14px;">
                 <div style="font-size: 0.9rem; font-weight: 800; color: var(--accent-pink); margin-bottom: 12px;">🕒 RECENTLY PLAYED</div>
                 <template x-for="(rName, idx) in recent" :key="idx">
-                    <div style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: rgba(255,255,255,0.04); border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border-color);" @click="playByName(rName)">
-                        <img :src="getTrackArtByName(rName)" @error="$el.onerror=null; $el.src='assets/album_placeholder.png'" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover;" />
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 16px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 8px 24px rgba(0,0,0,0.2);" @click="playByName(rName)">
+                        <img :src="getTrackArtByName(rName)" @error="$el.onerror=null; $el.src='assets/album%20art%20new%20place%20holder.png'" style="width: 44px; height: 44px; border-radius: 10px; object-fit: cover;" />
                         <div style="flex: 1; overflow: hidden;">
                             <div style="font-weight: 600; font-size: 0.88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" x-text="cleanTitle(rName)"></div>
                             <div style="font-size: 0.7rem; color: var(--accent-cyan);">Played Recently</div>
@@ -1360,7 +1364,7 @@ if ($authStatus !== 'authenticated') {
 
         <!-- Mini Floating Player Strip (Visible when browsing Library or Recent tab) -->
         <div class="go-mini-player" x-show="(mobileTab === 'library' || mobileTab === 'recent') && current" @click="mobileTab = 'player'">
-            <img :src="currentArt" @error="$el.onerror=null; $el.src='assets/album_placeholder.png'" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;" />
+            <img :src="currentArt" @error="$el.onerror=null; $el.src='assets/album%20art%20new%20place%20holder.png'" style="width: 40px; height: 40px; border-radius: 10px; object-fit: cover;" />
             <div style="flex: 1; overflow: hidden;">
                 <div style="font-weight: 700; font-size: 0.84rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" x-text="cleanTitle(current ? current.name : '')"></div>
                 <div style="font-size: 0.68rem; color: var(--accent-cyan);">Tap to expand player</div>
@@ -1369,6 +1373,7 @@ if ($authStatus !== 'authenticated') {
                 <span x-text="isPlaying ? '⏸' : '▶'"></span>
             </button>
         </div>
+
 
         <!-- Minimalist Icon-Only Thumb Navigation Dock -->
         <nav class="go-thumb-dock">
