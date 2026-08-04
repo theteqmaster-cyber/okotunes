@@ -24,7 +24,8 @@ if ($authStatus !== 'authenticated') {
     <meta name="theme-color" content="#FF007F" />
     <title>okotunes • Studio Pro & Mobile</title>
     <link rel="manifest" href="manifest.json" />
-    <link rel="icon" href="data:,">
+    <link rel="icon" type="image/png" href="assets/okotunes%20logo.png" />
+    <link rel="apple-touch-icon" href="assets/okotunes%20logo.png" />
     
     <script src="assets/alpine.min.js" defer></script>
     <style>
@@ -1467,7 +1468,7 @@ if ($authStatus !== 'authenticated') {
         <div class="modal-card" style="max-width: 580px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
                 <h3 style="font-size: 1.25rem; font-weight: 800; display: flex; align-items: center; gap: 10px; margin: 0;">
-                    ☁️ Upload Music Files
+                    <img src="assets/okotunes%20logo.png" alt="okotunes" style="height: 24px; border-radius: 6px; object-fit: contain;" /> Upload Music Files
                 </h3>
                 <button style="background:none; border:none; color:var(--text-secondary); font-size:1.5rem; cursor:pointer;" @click="showUploadModal = false">&times;</button>
             </div>
@@ -1559,7 +1560,7 @@ if ($authStatus !== 'authenticated') {
         <div class="modal-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h3 style="font-size: 1.25rem; font-weight: 800; display: flex; align-items: center; gap: 10px;">
-                    📊 Song Analytics Engine
+                    <img src="assets/okotunes%20logo.png" alt="okotunes" style="height: 24px; border-radius: 6px; object-fit: contain;" /> Song Analytics Engine
                 </h3>
                 <button style="background:none; border:none; color:var(--text-secondary); font-size:1.5rem; cursor:pointer;" @click="showAnalyticsModal = false">&times;</button>
             </div>

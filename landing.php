@@ -12,7 +12,8 @@ $captchaTarget = $_SESSION['captcha_target'] ?? 1;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>OkoStream • Hi-Res Master Audio Studio ($29.99/mo)</title>
-    <link rel="icon" href="data:,">
+    <link rel="icon" type="image/png" href="assets/okotunes%20logo.png" />
+    <link rel="apple-touch-icon" href="assets/okotunes%20logo.png" />
     <script src="assets/alpine.min.js" defer></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap');
@@ -345,7 +346,10 @@ $captchaTarget = $_SESSION['captcha_target'] ?? 1;
     <div class="modal-overlay" x-show="showLoginModal" x-cloak style="display: none;">
         <div class="modal-box">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h2>Member Sign In</h2>
+                <h2 style="display: flex; align-items: center; gap: 10px;">
+                    <img src="assets/okotunes%20logo.png" alt="okotunes" style="height: 28px; border-radius: 8px; object-fit: contain;" />
+                    Member Sign In
+                </h2>
                 <button @click="showLoginModal = false" style="background: none; border: none; color: var(--text-sub); font-size: 20px; cursor: pointer;">✕</button>
             </div>
             <p>Access your high-resolution OkoStream library.</p>

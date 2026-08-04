@@ -10,7 +10,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>OkoStream • Hi-Res Cloud Player</title>
-    <link rel="icon" href="data:,">
+    <link rel="icon" type="image/png" href="assets/okotunes%20logo.png" />
+    <link rel="apple-touch-icon" href="assets/okotunes%20logo.png" />
     <script src="assets/alpine.min.js" defer></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap');
@@ -72,7 +73,10 @@
 </head>
 <body x-data="{ currentTrack: 'Connecting to OkoStream Server...', status: 'Buffering stream signal (0%)...' }">
     <header class="app-header">
-        <div class="logo">OkoStream Pro</div>
+        <div class="logo" style="display: flex; align-items: center; gap: 10px;">
+            <img src="assets/okotunes%20logo.png" alt="okotunes Logo" style="width: 32px; height: 32px; border-radius: 8px; object-fit: contain;" />
+            <span>okotunes Pro</span>
+        </div>
         <div style="display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text-sub);">
             <div class="spinner"></div>
             <span>Encrypted Node Session</span>

@@ -8,9 +8,10 @@
   "theme_color": "#FF007F",
   "icons": [
     {
-      "src": "assets/album_placeholder.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "src": "assets/okotunes logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
