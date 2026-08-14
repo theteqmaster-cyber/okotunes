@@ -1,37 +1,69 @@
-# 🎵 okotunes — Ultra-Fast Personal Music Streamer
+# 🎵 OkoTunes — Vibes Without Borders
 
-![okotunes Cover Picture](assets/readme_cover.png)
+[![Live Subdomain](https://img.shields.io/badge/Live-okotunes.mphathisi.com-FF007A?style=for-the-badge&logo=music)](https://okotunes.mphathisi.com)
+[![Master Hub](https://img.shields.io/badge/Hub-mphathisi.com-7928CA?style=for-the-badge&logo=google-chrome)](https://mphathisi.com)
+[![GitHub](https://img.shields.io/badge/GitHub-theteqmaster--cyber-00F2FE?style=for-the-badge&logo=github)](https://github.com/theteqmaster-cyber)
 
-**okotunes** is a high-performance, containerized personal web-based music streaming service designed for deployment on **Render** backed by **Cloudflare R2** for zero-egress audio streaming and **SQLite** for ultra-fast database metadata querying.
-
----
-
-## 🚀 Key Highlights & Architecture
-
-- **Cloudflare R2 Audio Streaming**: Songs stream directly from Cloudflare R2's global edge network (zero egress fees, instant byte-range HTTP seeking).
-- **Embedded SQLite Database**: Lightweight `okotunes.sqlite` database stored on a Render Persistent Disk with zero network latency.
-- **Docker Containerized**: Built with PHP 8.2 & Apache, ready for 1-click Render blueprint deployment (`render.yaml`).
-- **Spatial Audio & DSP Engine**: Built-in 3D binaural positioning, virtual surround 5.1/7.1, concert hall reverb, and dynamic range compression via Web Audio API.
-- **Desktop & Mobile Responsive**: Glassmorphic UI tailored for both desktop studio workstations and mobile thumb navigation.
+> **OkoTunes** is a modern, responsive single-page music streamer and audio studio created by **Mphathisi Ndlovu (The Teq-master)** as part of the [mphathisi.com](https://mphathisi.com) software ecosystem.
 
 ---
 
-## 🛠 Deployment & Setup
+## ✨ Features
 
-### Environment Variables (Render / Docker)
-Set the following environment variables in your Render Web Service or `.env` file:
+- **🎧 Vibes Without Borders**: High-converting, visually rich dark mode design with glassmorphic pill navigation and ambient lighting.
+- **🔥 Curated Fire Tracks**: Interactive highlight cards for featured weekly releases (*Jamie Chastain - Crazy Frog*, *Samira - Voice*, *Alex - Rise 2 Top*).
+- **🎶 Infinite Music Library**: Dynamic genre exploration spanning *Hip Hop*, *Lo-Fi*, *Rock & Roll*, *R & B*, and *Afrobeats & Amapiano*.
+- **⚡ Built-in Web Audio Engine**: Zero-dependency procedural synthesis and chord generators with real-time waveform and frequency spectrum analyzer.
+- **🌐 Ecosystem Integration**: Seamless links and modals connecting to **Yallo AI Companion**, **SafeNet NUST Security**, and the Master Identity Hub at [mphathisi.com](https://mphathisi.com).
+- **📱 Fully Responsive**: Optimized for ultra-wide desktop, laptop, tablet, and mobile screens.
 
-```env
-R2_ACCOUNT_ID=your_cloudflare_account_id
-R2_ACCESS_KEY_ID=your_r2_access_key_id
-R2_SECRET_ACCESS_KEY=your_r2_secret_access_key
-R2_BUCKET_NAME=okotunes
-R2_PUBLIC_URL=https://pub-xxxx.r2.dev
-```
+---
 
-### Local Docker Build & Test
+## 🛠️ Tech Stack
+
+- **Frontend**: HTML5, Vanilla Modern CSS, Vanilla JavaScript (ES6+)
+- **Audio DSP**: Web Audio API (Biquad Filters, StereoPannerNode, AnalyserNode)
+- **Deployment**: Zero-configuration static hosting (Vercel, GitHub Pages) or PHP Apache / Render environments
+
+---
+
+## 🚀 Quick Start
+
+### Run Locally with Python:
 ```bash
-docker build -t okotunes .
-docker run -p 8080:80 --env-file .env okotunes
+python3 -m http.server 8000
 ```
-Open `http://localhost:8080` in your web browser.
+
+### Run Locally with PHP:
+```bash
+php -S localhost:8000
+```
+
+Open `http://localhost:8000` in your browser.
+
+---
+
+## 🌐 The Mphathisi Ecosystem
+
+- 🌐 [mphathisi.com](https://mphathisi.com) — Master Digital Identity Hub
+- 🎵 [okotunes.mphathisi.com](https://okotunes.mphathisi.com) — OkoTunes Audio Streamer
+- 🤖 [idevmight.mphathisi.com](https://idevmight.mphathisi.com) — Yallo AI Learning Companion
+- 🛡️ [cv.mphathisi.com](https://cv.mphathisi.com) — SafeNet NUST Campus Security Dispatch
+- 📦 [github.com/theteqmaster-cyber](https://github.com/theteqmaster-cyber) — Open Source Projects & Repositories
+
+---
+
+## 👤 Author
+
+**Mphathisi Ndlovu (The Teq-master)**  
+*Computer Science Innovator & Software Engineer*  
+National University of Science and Technology (NUST), Zimbabwe  
+- **Email**: [dev@mphathisi.com](mailto:dev@mphathisi.com) / [theteqmaster@gmail.com](mailto:theteqmaster@gmail.com)  
+- **GitHub**: [@theteqmaster-cyber](https://github.com/theteqmaster-cyber)  
+- **Master Hub**: [https://mphathisi.com](https://mphathisi.com)  
+
+---
+
+## 📄 License
+
+MIT License © 2026 Mphathisi Ndlovu
