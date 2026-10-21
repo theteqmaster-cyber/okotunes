@@ -1,6 +1,6 @@
 /**
- * Okotune (s) AI — Sovereign Intelligence Studio Frontend
- * Dedicated Fullscreen Login Gate, Multimodal Image Vision, & Real-Time Groq Streaming
+ * Okotune (s) AI — Sovereign Intelligence Studio Controller
+ * Powered by Groq LPU with Multimodal Vision & Tailwind CSS UI
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -46,14 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const formAddDirective = document.getElementById('formAddDirective');
   const inputNewDirective = document.getElementById('inputNewDirective');
 
-  // Application State
+  // State
   let currentThreadId = null;
   let isGenerating = false;
   let currentMessages = [];
   let attachedImageBase64 = null;
 
   // =========================================================================
-  // 1. Hard-Gated Authentication
+  // 1. Authentication Check & Submission
   // =========================================================================
   async function checkAuth() {
     try {
@@ -70,23 +70,27 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showLogin() {
+    loginScreen.classList.remove('hidden');
     loginScreen.style.display = 'flex';
+    appLayout.classList.add('hidden');
     appLayout.style.display = 'none';
     authPasswordInput.value = '';
     authEmailInput.focus();
   }
 
   function showApp() {
+    loginScreen.classList.add('hidden');
     loginScreen.style.display = 'none';
+    appLayout.classList.remove('hidden');
     appLayout.style.display = 'flex';
     initApp();
   }
 
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    loginErrorMsg.style.display = 'none';
+    loginErrorMsg.classList.add('hidden');
     btnLoginSubmit.disabled = true;
-    btnLoginSubmit.textContent = 'Verifying...';
+    btnLoginSubmit.textContent = 'Authenticating...';
 
     const email = authEmailInput.value.trim();
     const password = authPasswordInput.value.trim();
@@ -102,11 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
         showApp();
       } else {
         loginErrorMsg.textContent = data.error || 'Access denied. Invalid credentials.';
-        loginErrorMsg.style.display = 'block';
+        loginErrorMsg.classList.remove('hidden');
       }
     } catch (err) {
-      loginErrorMsg.textContent = 'Connection error. Check your server status.';
-      loginErrorMsg.style.display = 'block';
+      loginErrorMsg.textContent = 'Connection error. Please try again.';
+      loginErrorMsg.classList.remove('hidden');
     } finally {
       btnLoginSubmit.disabled = false;
       btnLoginSubmit.textContent = 'Access Private Studio';
@@ -116,12 +120,10 @@ document.addEventListener('DOMContentLoaded', () => {
   btnSignOut.addEventListener('click', async () => {
     try {
       await fetch('/api/auth.php', { method: 'DELETE' });
-      currentThreadId = null;
-      currentMessages = [];
-      showLogin();
-    } catch (err) {
-      showLogin();
-    }
+    } catch (err) {}
+    currentThreadId = null;
+    currentMessages = [];
+    showLogin();
   });
 
   function initApp() {
@@ -131,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================================================================
-  // 2. Multimodal Image Attachment & Processing
+  // 2. Multimodal Image Attachment & Vision
   // =========================================================================
   btnAttachImage.addEventListener('click', () => {
     imageFileInput.click();
@@ -152,9 +154,10 @@ document.addEventListener('DOMContentLoaded', () => {
       attachedImageBase64 = event.target.result;
       imagePreviewThumb.src = attachedImageBase64;
       imagePreviewFilename.textContent = file.name;
-      imagePreviewDock.style.display = 'flex';
+      imagePreviewDock.classList.remove('hidden');
+      imagePreviewDock.classList.add('flex');
 
-      // Automatically switch to Vision-capable Qwen model
+      // Auto-switch to Vision model
       modelSelect.value = 'qwen/qwen3.8-27b';
       activeModelBadge.textContent = 'Qwen 3.8 27B Vision';
 
@@ -171,13 +174,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function clearAttachedImage() {
     attachedImageBase64 = null;
     imageFileInput.value = '';
-    imagePreviewDock.style.display = 'none';
+    imagePreviewDock.classList.add('hidden');
+    imagePreviewDock.classList.remove('flex');
     btnSend.disabled = chatInput.value.trim().length === 0;
   }
 
-  // Clipboard Paste (Ctrl+V) for screenshots
+  // Paste handler for screenshots (Ctrl+V)
   window.addEventListener('paste', (e) => {
-    if (loginScreen.style.display !== 'none') return;
+    if (loginScreen.style.display !== 'none' && !loginScreen.classList.contains('hidden')) return;
     const items = (e.clipboardData || e.originalEvent.clipboardData).items;
     for (let i = 0; i < items.length; i++) {
       if (items[i].type.indexOf('image') !== -1) {
@@ -188,10 +192,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Drag and drop images into chat
+  // Drag and drop handler
   window.addEventListener('dragover', (e) => e.preventDefault());
   window.addEventListener('drop', (e) => {
-    if (loginScreen.style.display !== 'none') return;
+    if (loginScreen.style.display !== 'none' && !loginScreen.classList.contains('hidden')) return;
     e.preventDefault();
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
@@ -202,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // =========================================================================
-  // 3. Thread Management
+  // 3. Threads Management
   // =========================================================================
   async function loadThreads() {
     try {
@@ -222,27 +226,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderThreadsList(threads) {
-    threadsList.innerHTML = '<div class="threads-section-title">Conversations</div>';
+    threadsList.innerHTML = '<div class="px-3 py-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">Conversations</div>';
     if (!threads || threads.length === 0) {
       const emptyDiv = document.createElement('div');
-      emptyDiv.style.cssText = 'padding: 10px 12px; font-size: 0.8rem; color: var(--text-subtle);';
+      emptyDiv.className = 'px-3 py-2 text-xs text-slate-500 font-mono';
       emptyDiv.textContent = 'No past conversations';
       threadsList.appendChild(emptyDiv);
       return;
     }
 
     threads.forEach((t) => {
+      const isActive = t.id === currentThreadId;
       const item = document.createElement('div');
-      item.className = `thread-item ${t.id === currentThreadId ? 'active' : ''}`;
+      item.className = `group flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium cursor-pointer transition ${
+        isActive 
+          ? 'bg-indigo-600/20 text-white border border-indigo-500/30 font-semibold' 
+          : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+      }`;
       item.dataset.id = t.id;
 
       item.innerHTML = `
-        <span class="thread-title-text" title="${escapeHtml(t.title)}">${escapeHtml(t.title)}</span>
-        <div class="thread-actions">
-          <button class="btn-thread-action btn-del-thread" title="Delete conversation">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-          </button>
-        </div>
+        <span class="truncate flex-1" title="${escapeHtml(t.title)}">${escapeHtml(t.title)}</span>
+        <button class="btn-del-thread opacity-0 group-hover:opacity-100 p-1 hover:text-rose-400 transition" title="Delete conversation">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+        </button>
       `;
 
       item.addEventListener('click', (e) => {
@@ -263,11 +270,16 @@ document.addEventListener('DOMContentLoaded', () => {
     currentThreadId = id;
     threadTitle.textContent = title || 'Conversation';
 
-    document.querySelectorAll('.thread-item').forEach((el) => {
-      el.classList.toggle('active', el.dataset.id === id);
+    document.querySelectorAll('#threadsList > div[data-id]').forEach((el) => {
+      const match = el.dataset.id === id;
+      el.className = `group flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium cursor-pointer transition ${
+        match 
+          ? 'bg-indigo-600/20 text-white border border-indigo-500/30 font-semibold' 
+          : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+      }`;
     });
 
-    sidebar.classList.remove('open');
+    sidebar.classList.add('-translate-x-full');
 
     try {
       const res = await fetch(`/api/threads.php?id=${id}`);
@@ -320,13 +332,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // 4. Message Rendering & Markdown Parser
   // =========================================================================
   function renderChatMessages() {
-    const existingRows = chatContainer.querySelectorAll('.message-row');
+    const existingRows = chatContainer.querySelectorAll('.chat-msg-row');
     existingRows.forEach((r) => r.remove());
 
     if (!currentMessages || currentMessages.length === 0) {
-      welcomeHero.style.display = 'flex';
+      welcomeHero.classList.remove('hidden');
+      welcomeHero.classList.add('flex');
     } else {
-      welcomeHero.style.display = 'none';
+      welcomeHero.classList.add('hidden');
+      welcomeHero.classList.remove('flex');
       currentMessages.forEach((msg, idx) => {
         appendMessageElement(msg.role, msg.content, msg.image || null, idx);
       });
@@ -335,65 +349,55 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function appendMessageElement(role, textContent, imageBase64 = null, index = null) {
-    welcomeHero.style.display = 'none';
+    welcomeHero.classList.add('hidden');
+    welcomeHero.classList.remove('flex');
 
     const row = document.createElement('div');
-    row.className = `message-row ${role}`;
+    row.className = 'chat-msg-row w-full flex gap-3 transition-all';
     if (index !== null) row.dataset.index = index;
 
-    const avatar = document.createElement('div');
-    avatar.className = 'avatar-badge';
-    avatar.textContent = role === 'user' ? 'MPAS' : 'OKO';
+    if (role === 'user') {
+      row.classList.add('justify-end');
+      row.innerHTML = `
+        <div class="max-w-[85%] bg-gradient-to-r from-indigo-600/25 to-purple-600/25 border border-indigo-500/30 rounded-2xl rounded-tr-sm p-4 text-white text-sm shadow-md backdrop-blur-md">
+          ${imageBase64 ? `<div class="mb-3"><img src="${imageBase64}" alt="Attached" class="max-w-xs max-h-60 rounded-xl border border-indigo-400/30 object-cover shadow-lg"></div>` : ''}
+          <div class="whitespace-pre-wrap">${escapeHtml(textContent)}</div>
+        </div>
+        <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white font-mono text-xs font-bold flex items-center justify-center flex-shrink-0 shadow-sm">
+          MPAS
+        </div>
+      `;
+      chatContainer.appendChild(row);
+      return row.querySelector('.whitespace-pre-wrap');
+    } else {
+      row.classList.add('justify-start');
+      row.innerHTML = `
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white font-mono text-xs font-bold flex items-center justify-center flex-shrink-0 shadow-sm shadow-indigo-500/20">
+          OKO
+        </div>
+        <div class="max-w-[88%] bg-dark-900/90 border border-slate-800 rounded-2xl rounded-tl-sm p-4 text-slate-200 text-sm shadow-md backdrop-blur-md">
+          <div class="message-content leading-relaxed">${formatMarkdown(textContent)}</div>
+          <div class="flex items-center gap-2 mt-3 pt-2 border-t border-slate-800/80 text-[11px] text-slate-400">
+            <button class="btn-copy-msg hover:text-white transition flex items-center gap-1 cursor-pointer">
+              <span>📋</span> <span>Copy</span>
+            </button>
+          </div>
+        </div>
+      `;
+      chatContainer.appendChild(row);
 
-    const bubble = document.createElement('div');
-    bubble.className = 'message-bubble';
+      const copyBtn = row.querySelector('.btn-copy-msg');
+      if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+          navigator.clipboard.writeText(textContent);
+          copyBtn.innerHTML = '<span>✓</span> <span>Copied!</span>';
+          setTimeout(() => { copyBtn.innerHTML = '<span>📋</span> <span>Copy</span>'; }, 1800);
+        });
+      }
 
-    const contentDiv = document.createElement('div');
-    contentDiv.className = 'message-content';
-
-    // If an image was attached by the user, embed the thumbnail
-    if (role === 'user' && imageBase64) {
-      const imgContainer = document.createElement('div');
-      imgContainer.className = 'user-attached-image-container';
-      const img = document.createElement('img');
-      img.className = 'user-attached-image';
-      img.src = imageBase64;
-      img.alt = 'Attached Image';
-      imgContainer.appendChild(img);
-      contentDiv.appendChild(imgContainer);
+      setupCodeBlockCopy(row);
+      return row.querySelector('.message-content');
     }
-
-    const textWrap = document.createElement('div');
-    textWrap.innerHTML = formatMarkdown(textContent);
-    contentDiv.appendChild(textWrap);
-
-    bubble.appendChild(contentDiv);
-
-    // If assistant, attach action bar
-    if (role === 'assistant') {
-      const actionsBar = document.createElement('div');
-      actionsBar.className = 'message-actions-bar';
-
-      const btnCopy = document.createElement('button');
-      btnCopy.className = 'btn-msg-action';
-      btnCopy.innerHTML = `📋 <span>Copy</span>`;
-      btnCopy.addEventListener('click', () => {
-        navigator.clipboard.writeText(textContent);
-        btnCopy.innerHTML = `✓ <span>Copied</span>`;
-        setTimeout(() => { btnCopy.innerHTML = `📋 <span>Copy</span>`; }, 1800);
-      });
-      actionsBar.appendChild(btnCopy);
-
-      bubble.appendChild(actionsBar);
-    }
-
-    row.appendChild(avatar);
-    row.appendChild(bubble);
-    chatContainer.appendChild(row);
-
-    setupCodeBlockCopy(contentDiv);
-
-    return textWrap;
   }
 
   // =========================================================================
@@ -414,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageToSend = attachedImageBase64;
     clearAttachedImage();
 
-    // 1. Render User Message
+    // 1. Optimistic User Bubble
     const userMsg = {
       role: 'user',
       content: text || 'Inspect this image',
@@ -425,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
     appendMessageElement('user', userMsg.content, imageToSend, currentMessages.length - 1);
     scrollToBottom();
 
-    // 2. Prepare Assistant Streaming Message
+    // 2. Prepare Assistant Bubble
     const assistantContentDiv = appendMessageElement('assistant', '');
     const cursor = document.createElement('span');
     cursor.className = 'streaming-cursor';
@@ -476,18 +480,15 @@ document.addEventListener('DOMContentLoaded', () => {
                   assistantContentDiv.appendChild(cursor);
                   scrollToBottom();
                 }
-              } catch (err) {
-                // Ignore partial chunks
-              }
+              } catch (err) {}
             }
           }
         }
       }
 
-      // Stream Finished
       cursor.remove();
       assistantContentDiv.innerHTML = formatMarkdown(fullText);
-      setupCodeBlockCopy(assistantContentDiv);
+      setupCodeBlockCopy(assistantContentDiv.closest('.chat-msg-row'));
 
       const assistantMsg = {
         role: 'assistant',
@@ -501,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } catch (err) {
       cursor.remove();
-      assistantContentDiv.innerHTML = `<span style="color: #ef4444;">Error: ${escapeHtml(err.message)}</span>`;
+      assistantContentDiv.innerHTML = `<span class="text-rose-400 font-medium">Error: ${escapeHtml(err.message)}</span>`;
     } finally {
       isGenerating = false;
       btnSend.disabled = chatInput.value.trim().length === 0 && !attachedImageBase64;
@@ -510,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================================================================
-  // 6. Directives & Lore Drawer
+  // 6. Directives & Lore
   // =========================================================================
   async function loadLore() {
     try {
@@ -527,19 +528,19 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderDirectives(directives) {
     directivesList.innerHTML = '';
     if (directives.length === 0) {
-      directivesList.innerHTML = '<div style="color: var(--text-subtle); font-size: 0.8rem;">No custom directives added yet.</div>';
+      directivesList.innerHTML = '<div class="text-xs text-slate-500">No custom directives added yet.</div>';
       return;
     }
 
     directives.forEach((d) => {
       const card = document.createElement('div');
-      card.className = 'directive-card';
+      card.className = 'p-3 rounded-xl bg-dark-850 border border-slate-800 text-xs text-slate-300 relative space-y-1';
       card.innerHTML = `
-        <div class="directive-header">
-          <span class="directive-cat">${escapeHtml(d.category || 'Rule')}</span>
-          <button class="btn-delete-dir" data-id="${d.id}" title="Remove directive">✕</button>
+        <div class="flex items-center justify-between text-[10px] font-mono font-bold text-indigo-400 uppercase">
+          <span>${escapeHtml(d.category || 'Rule')}</span>
+          <button class="btn-delete-dir text-slate-500 hover:text-rose-400 p-0.5" data-id="${d.id}">✕</button>
         </div>
-        <div class="directive-rule">${escapeHtml(d.rule)}</div>
+        <div class="leading-relaxed text-white">${escapeHtml(d.rule)}</div>
       `;
 
       card.querySelector('.btn-delete-dir').addEventListener('click', async (e) => {
@@ -577,31 +578,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Drawer Controls
+  // Drawer Toggles
   btnOpenLore.addEventListener('click', () => {
     loadLore();
-    drawerOverlay.classList.add('open');
-    loreDrawer.classList.add('open');
+    drawerOverlay.classList.remove('hidden');
+    loreDrawer.classList.remove('translate-x-full');
   });
 
-  btnCloseDrawer.addEventListener('click', () => {
-    drawerOverlay.classList.remove('open');
-    loreDrawer.classList.remove('open');
-  });
+  btnCloseDrawer.addEventListener('click', closeDrawer);
+  drawerOverlay.addEventListener('click', closeDrawer);
 
-  drawerOverlay.addEventListener('click', () => {
-    drawerOverlay.classList.remove('open');
-    loreDrawer.classList.remove('open');
-  });
+  function closeDrawer() {
+    drawerOverlay.classList.add('hidden');
+    loreDrawer.classList.add('translate-x-full');
+  }
 
   // =========================================================================
-  // 7. General Event Listeners
+  // 7. Event Handlers
   // =========================================================================
   function setupEventListeners() {
     btnNewChat.addEventListener('click', createNewThread);
 
     btnMobileToggle.addEventListener('click', () => {
-      sidebar.classList.toggle('open');
+      sidebar.classList.toggle('-translate-x-full');
     });
 
     modelSelect.addEventListener('change', () => {
@@ -679,39 +678,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let html = escapeHtml(text);
 
-    // Multi-line code blocks
+    // Code blocks
     html = html.replace(/```([a-zA-Z0-9_\-#+]*)\n([\s\S]*?)```/g, (match, lang, code) => {
       const language = lang || 'code';
-      return `<pre><div class="code-header"><span>${language}</span><button class="btn-copy-code">Copy</button></div><code>${code.trim()}</code></pre>`;
+      return `<pre class="my-3 rounded-xl overflow-hidden bg-dark-950 border border-slate-800"><div class="flex items-center justify-between px-3.5 py-1.5 bg-dark-900 border-b border-slate-800 text-[11px] font-mono text-slate-400"><span>${language}</span><button class="btn-copy-code px-2 py-0.5 rounded hover:bg-slate-800 text-slate-300">Copy</button></div><code class="p-3.5 block overflow-x-auto text-xs font-mono text-slate-200 leading-relaxed">${code.trim()}</code></pre>`;
     });
 
     // Inline code
-    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+    html = html.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded bg-slate-800/80 text-indigo-300 font-mono text-xs border border-slate-700/60">$1</code>');
 
     // Headers
-    html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
-    html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
-    html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+    html = html.replace(/^### (.*$)/gim, '<h3 class="text-base font-bold text-white mt-4 mb-1">$1</h3>');
+    html = html.replace(/^## (.*$)/gim, '<h2 class="text-lg font-bold text-white mt-5 mb-1.5">$1</h2>');
+    html = html.replace(/^# (.*$)/gim, '<h1 class="text-xl font-bold text-white mt-6 mb-2">$1</h1>');
 
     // Bold & Italic
-    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-bold text-white">$1</strong>');
+    html = html.replace(/\*([^*]+)\*/g, '<em class="italic text-slate-300">$1</em>');
 
     // Blockquotes
-    html = html.replace(/^\&gt;\s?(.*$)/gim, '<blockquote>$1</blockquote>');
+    html = html.replace(/^\&gt;\s?(.*$)/gim, '<blockquote class="border-l-2 border-indigo-500 pl-3 py-1 my-2 bg-indigo-500/5 text-slate-300 rounded-r-lg">$1</blockquote>');
 
     // Lists
-    html = html.replace(/^\s*[-*]\s+(.*)$/gim, '<li>$1</li>');
-    html = html.replace(/(<li>.*<\/li>)/gims, '<ul>$1</ul>');
+    html = html.replace(/^\s*[-*]\s+(.*)$/gim, '<li class="ml-4 list-disc text-slate-300">$1</li>');
+    html = html.replace(/(<li.*<\/li>)/gims, '<ul class="my-2 space-y-1">$1</ul>');
 
     // Paragraphs
     html = html.split('\n\n').map(p => {
       p = p.trim();
       if (!p) return '';
-      if (p.startsWith('<pre>') || p.startsWith('<h1>') || p.startsWith('<h2>') || p.startsWith('<h3>') || p.startsWith('<ul>') || p.startsWith('<blockquote>')) {
+      if (p.startsWith('<pre') || p.startsWith('<h1') || p.startsWith('<h2') || p.startsWith('<h3') || p.startsWith('<ul') || p.startsWith('<blockquote')) {
         return p;
       }
-      return `<p>${p.replace(/\n/g, '<br>')}</p>`;
+      return `<p class="my-1.5 leading-relaxed text-slate-200">${p.replace(/\n/g, '<br>')}</p>`;
     }).join('');
 
     return html;
