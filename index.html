@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Okotune (s) — Sovereign AI</title>
-  <meta name="description" content="Private Sovereign AI Studio for Mphathisi Ndlovu and the M.P.A.S Ecosystem. Overfitting Engine powered by Groq.">
+  <meta name="description" content="Private Sovereign AI Studio for Mphathisi Ndlovu and the M.P.A.S Ecosystem. Powered by Groq LPU.">
   
   <!-- Modern Geometric & Monospace Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,8 +21,58 @@
   </div>
   <div class="grid-mesh" aria-hidden="true"></div>
 
-  <!-- App Shell -->
-  <div class="app-layout">
+  <!-- Dedicated Fullscreen Login Screen (Hard-Gated) -->
+  <section class="login-screen" id="loginScreen" style="display: flex;">
+    <div class="login-card">
+      <div class="login-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
+          <path d="M12 12 2.1 10.5"></path>
+          <path d="M12 12V22"></path>
+        </svg>
+      </div>
+
+      <h1 class="login-title">Okotune (s)</h1>
+      <p class="login-subtitle">Private Sovereign AI • M.P.A.S Ecosystem</p>
+
+      <form class="login-form" id="loginForm">
+        <div class="input-field-group">
+          <label for="authEmailInput">Ecosystem Email</label>
+          <input 
+            type="email" 
+            id="authEmailInput" 
+            class="login-input" 
+            placeholder="admin@okotunes.com" 
+            required 
+            autocomplete="username"
+          />
+        </div>
+
+        <div class="input-field-group">
+          <label for="authPasswordInput">Master Passkey</label>
+          <input 
+            type="password" 
+            id="authPasswordInput" 
+            class="login-input" 
+            placeholder="••••••••••••" 
+            required 
+            autocomplete="current-password"
+          />
+        </div>
+
+        <button type="submit" class="login-btn" id="btnLoginSubmit">
+          Access Private Studio
+        </button>
+
+        <div class="login-error-msg" id="loginErrorMsg">
+          Access denied. Invalid credentials for M.P.A.S ecosystem.
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Main App Shell (Hidden Until Authenticated) -->
+  <div class="app-layout" id="appLayout" style="display: none;">
     
     <!-- Left Navigation Sidebar -->
     <aside class="sidebar" id="sidebar">
@@ -45,13 +95,13 @@
       <div class="sidebar-actions">
         <button class="btn-new-chat" id="btnNewChat">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-          <span>New Thread</span>
+          <span>New Chat</span>
         </button>
 
         <div class="model-selector-bar">
           <label for="modelSelect">Engine</label>
           <select id="modelSelect" class="model-select">
-            <option value="qwen/qwen3.8-27b" selected>Qwen 3.8 27B (LPU Fast)</option>
+            <option value="qwen/qwen3.8-27b" selected>Qwen 3.8 27B (Fast + Vision)</option>
             <option value="openai/gpt-oss-120b">GPT-OSS 120B (Reasoning)</option>
             <option value="openai/gpt-oss-20b">GPT-OSS 20B (Instant)</option>
           </select>
@@ -61,19 +111,18 @@
       <!-- Threads History -->
       <div class="sidebar-threads" id="threadsList">
         <div class="threads-section-title">Conversations</div>
-        <!-- Rendered dynamically -->
       </div>
 
       <!-- Sidebar Bottom Controls -->
       <div class="sidebar-footer">
         <button class="footer-btn" id="btnOpenLore">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-          <span>Lore & Overfitting</span>
+          <span>Directives & Lore</span>
         </button>
 
-        <button class="footer-btn" id="btnExportDataset">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-          <span>Export Dataset (.jsonl)</span>
+        <button class="footer-btn btn-logout" id="btnSignOut">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          <span>Sign Out</span>
         </button>
 
         <div class="footer-status-row">
@@ -100,7 +149,7 @@
         </div>
 
         <div class="top-bar-right">
-          <div class="badge-pill" id="activeModelBadge">Qwen 3.8 27B</div>
+          <div class="badge-pill" id="activeModelBadge">Qwen 3.8 27B Vision</div>
           <button class="btn-icon-top" id="btnClearThread" title="Clear current thread">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
             <span>Clear</span>
@@ -123,28 +172,28 @@
             </div>
             <h1 class="hero-title">Okotune (s)</h1>
             <p class="hero-desc">
-              Sovereign intelligence for <strong>Mphathisi Ndlovu</strong>. Continuously learning your preferences, workflows, and projects to overfit perfectly to you.
+              Sovereign intelligence for <strong>Mphathisi Ndlovu</strong>. Powered by ultra-fast Groq LPU with multimodal vision processing.
             </p>
 
             <div class="prompt-suggestions-grid">
-              <div class="suggestion-card" data-prompt="Architect a high-performance backend microservice for the M.P.A.S ecosystem using modern PHP and zero-dependency endpoints.">
+              <div class="suggestion-card" data-prompt="Architect a clean, scalable PHP backend service with zero framework overhead.">
                 <div class="suggestion-tag">Architecture</div>
-                <div class="suggestion-text">Architect a high-performance PHP backend service</div>
+                <div class="suggestion-text">Architect a clean, scalable PHP backend service</div>
               </div>
 
-              <div class="suggestion-card" data-prompt="Audit the security protocols and threat mitigation model for SafeNet NUST.">
+              <div class="suggestion-card" data-prompt="Review and optimize security protocols for the SafeNet NUST project.">
                 <div class="suggestion-tag">Cybersecurity</div>
-                <div class="suggestion-text">Audit security protocols for SafeNet NUST</div>
+                <div class="suggestion-text">Review and optimize security protocols for SafeNet NUST</div>
               </div>
 
-              <div class="suggestion-card" data-prompt="Draft a fine-tuning roadmap and hyperparameter strategy for our private LoRA training dataset on Groq / R2.">
-                <div class="suggestion-tag">Overfitting Engine</div>
-                <div class="suggestion-text">Draft a fine-tuning & LoRA training roadmap</div>
+              <div class="suggestion-card" data-prompt="Analyze this screenshot and explain the architecture or fix the code in it.">
+                <div class="suggestion-tag">Multimodal Vision</div>
+                <div class="suggestion-text">Inspect and analyze an image or code screenshot</div>
               </div>
 
               <div class="suggestion-card" data-prompt="Review the Cloudflare R2 backup automation and public egress mappings for notak2.mphathisi.com.">
                 <div class="suggestion-tag">Cloud Infrastructure</div>
-                <div class="suggestion-text">Review R2 storage & public egress mappings</div>
+                <div class="suggestion-text">Review Cloudflare R2 storage & public egress mappings</div>
               </div>
             </div>
           </div>
@@ -157,18 +206,40 @@
       <!-- Floating Input Bar -->
       <div class="input-dock-container">
         <div class="input-box-wrapper">
+          
+          <!-- Attached Image Thumbnail Preview Bar -->
+          <div class="image-preview-dock" id="imagePreviewDock">
+            <div class="image-preview-thumb-wrap">
+              <img id="imagePreviewThumb" class="image-preview-thumb" src="" alt="Thumbnail">
+              <button class="btn-remove-image" id="btnRemoveImage" title="Remove image">✕</button>
+            </div>
+            <div class="image-preview-meta">
+              <span class="image-preview-filename" id="imagePreviewFilename">image.png</span>
+              <span class="image-preview-tag">Multimodal Vision Attached</span>
+            </div>
+          </div>
+
           <textarea 
             id="chatInput" 
             class="chat-textarea" 
-            placeholder="Ask Okotune AI or give an instruction... (Shift + Enter for new line)"
+            placeholder="Ask Okotune AI or paste/attach an image... (Shift + Enter for new line)"
             rows="1"
           ></textarea>
           
           <div class="input-controls-row">
-            <div class="input-hints-left">
-              <span>M.P.A.S Overfitting Active</span>
-              <span>•</span>
-              <span id="tokenCounter">Groq LPU 500+ t/s</span>
+            <div class="input-tools-left">
+              <!-- Hidden File Input for Image Upload -->
+              <input type="file" id="imageFileInput" accept="image/*" style="display: none;">
+              
+              <button class="btn-attach-image" id="btnAttachImage" title="Attach Image for Vision Processing">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                </svg>
+              </button>
+
+              <div class="input-hints-left">
+                <span>Drag, paste, or attach an image</span>
+              </div>
             </div>
 
             <button class="btn-send" id="btnSend" disabled aria-label="Send message">
@@ -180,48 +251,25 @@
           </div>
         </div>
         <div class="input-footer-note">
-          Private to Mphathisi Ndlovu • Data preserved in Sovereign LoRA Corpus • <a href="https://mphathisi.com" target="_blank" rel="noopener noreferrer" style="color: var(--text-muted); text-decoration: none;">mphathisi.com</a>
+          Private to Mphathisi Ndlovu • <a href="https://mphathisi.com" target="_blank" rel="noopener noreferrer" style="color: var(--text-muted); text-decoration: none;">mphathisi.com</a>
         </div>
       </div>
     </main>
 
   </div>
 
-  <!-- Drawer: Lore & Overfitting Inspector -->
+  <!-- Drawer: Lore & Directives Inspector -->
   <div class="drawer-overlay" id="drawerOverlay"></div>
   <aside class="lore-drawer" id="loreDrawer">
     <div class="drawer-header">
-      <div class="drawer-title">🧠 Lore & Memory Inspector</div>
+      <div class="drawer-title">🧠 Ecosystem Directives & Lore</div>
       <button class="btn-close-drawer" id="btnCloseDrawer" aria-label="Close drawer">✕</button>
     </div>
 
     <div class="drawer-body">
-      <!-- Stats Card -->
-      <div class="stats-card">
-        <h4>Overfitting Metrics</h4>
-        <div class="stats-grid">
-          <div class="stat-item">
-            <span class="stat-val" id="statInteractions">0</span>
-            <span class="stat-lbl">Interactions Logged</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-val" id="statGold">0</span>
-            <span class="stat-lbl">Gold Standard Pairs</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-val" id="statDatasetSize">0 KB</span>
-            <span class="stat-lbl">Dataset Corpus</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-val" style="color: var(--accent-emerald);">Active</span>
-            <span class="stat-lbl">R2 Auto-Sync</span>
-          </div>
-        </div>
-      </div>
-
       <!-- Directives Section -->
       <div class="lore-section">
-        <h4>Permanent Directives & Rules</h4>
+        <h4>Permanent Directives & Knowledge</h4>
         <div id="directivesList">
           <!-- Populated by JS -->
         </div>
@@ -231,54 +279,14 @@
             type="text" 
             class="input-directive-text" 
             id="inputNewDirective" 
-            placeholder="Add new rule or preference (e.g. Always use PHP 8.2)..."
+            placeholder="Add new rule or preference (e.g. Always use PHP 8.3)..."
             required
           />
-          <button type="submit" class="btn-submit-dir">+ Teach Okotune</button>
+          <button type="submit" class="btn-submit-dir">+ Save Directive</button>
         </form>
-      </div>
-
-      <!-- Export Datasets -->
-      <div class="lore-section">
-        <h4>Export Fine-Tuning Corpus</h4>
-        <div style="display: flex; gap: 10px; margin-top: 8px;">
-          <a href="/api/export.php?format=jsonl" class="btn-submit-dir" style="text-decoration: none; text-align: center; flex: 1;">
-            Download .jsonl (LoRA)
-          </a>
-          <a href="/api/export.php?format=json" class="btn-submit-dir" style="text-decoration: none; text-align: center; flex: 1; background: var(--bg-glass);">
-            Download .json
-          </a>
-        </div>
       </div>
     </div>
   </aside>
-
-  <!-- Auth Modal -->
-  <div class="auth-modal-overlay" id="authModalOverlay" style="display: none;">
-    <div class="auth-modal">
-      <div class="auth-icon-wrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-        </svg>
-      </div>
-      <h2 class="auth-title">Okotune Sovereign Access</h2>
-      <p class="auth-desc">Enter your M.P.A.S master passkey to unlock your private AI workspace.</p>
-
-      <form class="auth-form" id="authForm">
-        <input 
-          type="password" 
-          id="authPasswordInput" 
-          class="auth-input" 
-          placeholder="Enter Passkey..." 
-          required 
-          autocomplete="current-password"
-        />
-        <button type="submit" class="auth-submit-btn">Unlock Workspace</button>
-        <div class="auth-error-msg" id="authErrorMsg">Invalid passkey. Try again.</div>
-      </form>
-    </div>
-  </div>
 
   <script src="app.js"></script>
 </body>

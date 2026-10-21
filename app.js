@@ -1,10 +1,20 @@
 /**
  * Okotune (s) AI — Sovereign Intelligence Studio Frontend
- * Handles SSE Streaming, Multi-Turn Threads, Markdown DSP, and Overfitting Lore
+ * Dedicated Fullscreen Login Gate, Multimodal Image Vision, & Real-Time Groq Streaming
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // DOM Elements
+  // DOM Elements - Auth & Screens
+  const loginScreen = document.getElementById('loginScreen');
+  const appLayout = document.getElementById('appLayout');
+  const loginForm = document.getElementById('loginForm');
+  const authEmailInput = document.getElementById('authEmailInput');
+  const authPasswordInput = document.getElementById('authPasswordInput');
+  const btnLoginSubmit = document.getElementById('btnLoginSubmit');
+  const loginErrorMsg = document.getElementById('loginErrorMsg');
+  const btnSignOut = document.getElementById('btnSignOut');
+
+  // DOM Elements - Workspace & Navigation
   const sidebar = document.getElementById('sidebar');
   const btnMobileToggle = document.getElementById('btnMobileToggle');
   const btnNewChat = document.getElementById('btnNewChat');
@@ -19,79 +29,180 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatInput = document.getElementById('chatInput');
   const btnSend = document.getElementById('btnSend');
 
+  // Image Attachment Elements
+  const btnAttachImage = document.getElementById('btnAttachImage');
+  const imageFileInput = document.getElementById('imageFileInput');
+  const imagePreviewDock = document.getElementById('imagePreviewDock');
+  const imagePreviewThumb = document.getElementById('imagePreviewThumb');
+  const imagePreviewFilename = document.getElementById('imagePreviewFilename');
+  const btnRemoveImage = document.getElementById('btnRemoveImage');
+
   // Lore Drawer Elements
   const btnOpenLore = document.getElementById('btnOpenLore');
   const btnCloseDrawer = document.getElementById('btnCloseDrawer');
   const drawerOverlay = document.getElementById('drawerOverlay');
   const loreDrawer = document.getElementById('loreDrawer');
-  const statInteractions = document.getElementById('statInteractions');
-  const statGold = document.getElementById('statGold');
-  const statDatasetSize = document.getElementById('statDatasetSize');
   const directivesList = document.getElementById('directivesList');
   const formAddDirective = document.getElementById('formAddDirective');
   const inputNewDirective = document.getElementById('inputNewDirective');
-
-  // Auth Modal Elements
-  const authModalOverlay = document.getElementById('authModalOverlay');
-  const authForm = document.getElementById('authForm');
-  const authPasswordInput = document.getElementById('authPasswordInput');
-  const authErrorMsg = document.getElementById('authErrorMsg');
 
   // Application State
   let currentThreadId = null;
   let isGenerating = false;
   let currentMessages = [];
+  let attachedImageBase64 = null;
 
   // =========================================================================
-  // 1. Authentication & Initialization
+  // 1. Hard-Gated Authentication
   // =========================================================================
   async function checkAuth() {
     try {
       const res = await fetch('/api/auth.php');
       const data = await res.json();
-      if (!data.authenticated) {
-        authModalOverlay.style.display = 'flex';
+      if (data.authenticated) {
+        showApp();
       } else {
-        authModalOverlay.style.display = 'none';
-        initApp();
+        showLogin();
       }
     } catch (e) {
-      console.warn('Auth check fallback:', e);
-      initApp();
+      showLogin();
     }
   }
 
-  authForm.addEventListener('submit', async (e) => {
+  function showLogin() {
+    loginScreen.style.display = 'flex';
+    appLayout.style.display = 'none';
+    authPasswordInput.value = '';
+    authEmailInput.focus();
+  }
+
+  function showApp() {
+    loginScreen.style.display = 'none';
+    appLayout.style.display = 'flex';
+    initApp();
+  }
+
+  loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    authErrorMsg.style.display = 'none';
-    const pwd = authPasswordInput.value.trim();
+    loginErrorMsg.style.display = 'none';
+    btnLoginSubmit.disabled = true;
+    btnLoginSubmit.textContent = 'Verifying...';
+
+    const email = authEmailInput.value.trim();
+    const password = authPasswordInput.value.trim();
 
     try {
       const res = await fetch('/api/auth.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: pwd })
+        body: JSON.stringify({ email, password })
       });
       const data = await res.json();
       if (data.success) {
-        authModalOverlay.style.display = 'none';
-        initApp();
+        showApp();
       } else {
-        authErrorMsg.style.display = 'block';
+        loginErrorMsg.textContent = data.error || 'Access denied. Invalid credentials.';
+        loginErrorMsg.style.display = 'block';
       }
     } catch (err) {
-      authErrorMsg.style.display = 'block';
+      loginErrorMsg.textContent = 'Connection error. Check your server status.';
+      loginErrorMsg.style.display = 'block';
+    } finally {
+      btnLoginSubmit.disabled = false;
+      btnLoginSubmit.textContent = 'Access Private Studio';
+    }
+  });
+
+  btnSignOut.addEventListener('click', async () => {
+    try {
+      await fetch('/api/auth.php', { method: 'DELETE' });
+      currentThreadId = null;
+      currentMessages = [];
+      showLogin();
+    } catch (err) {
+      showLogin();
     }
   });
 
   function initApp() {
     loadThreads();
-    loadLoreStats();
+    loadLore();
     setupEventListeners();
   }
 
   // =========================================================================
-  // 2. Thread Management
+  // 2. Multimodal Image Attachment & Processing
+  // =========================================================================
+  btnAttachImage.addEventListener('click', () => {
+    imageFileInput.click();
+  });
+
+  imageFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) handleImageFile(file);
+  });
+
+  function handleImageFile(file) {
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file (PNG, JPG, WEBP, GIF).');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      attachedImageBase64 = event.target.result;
+      imagePreviewThumb.src = attachedImageBase64;
+      imagePreviewFilename.textContent = file.name;
+      imagePreviewDock.style.display = 'flex';
+
+      // Automatically switch to Vision-capable Qwen model
+      modelSelect.value = 'qwen/qwen3.8-27b';
+      activeModelBadge.textContent = 'Qwen 3.8 27B Vision';
+
+      btnSend.disabled = false;
+      chatInput.focus();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  btnRemoveImage.addEventListener('click', () => {
+    clearAttachedImage();
+  });
+
+  function clearAttachedImage() {
+    attachedImageBase64 = null;
+    imageFileInput.value = '';
+    imagePreviewDock.style.display = 'none';
+    btnSend.disabled = chatInput.value.trim().length === 0;
+  }
+
+  // Clipboard Paste (Ctrl+V) for screenshots
+  window.addEventListener('paste', (e) => {
+    if (loginScreen.style.display !== 'none') return;
+    const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') !== -1) {
+        const file = items[i].getAsFile();
+        handleImageFile(file);
+        break;
+      }
+    }
+  });
+
+  // Drag and drop images into chat
+  window.addEventListener('dragover', (e) => e.preventDefault());
+  window.addEventListener('drop', (e) => {
+    if (loginScreen.style.display !== 'none') return;
+    e.preventDefault();
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      if (file.type.startsWith('image/')) {
+        handleImageFile(file);
+      }
+    }
+  });
+
+  // =========================================================================
+  // 3. Thread Management
   // =========================================================================
   async function loadThreads() {
     try {
@@ -128,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
       item.innerHTML = `
         <span class="thread-title-text" title="${escapeHtml(t.title)}">${escapeHtml(t.title)}</span>
         <div class="thread-actions">
-          <button class="btn-thread-action btn-del-thread" title="Delete thread">
+          <button class="btn-thread-action btn-del-thread" title="Delete conversation">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
           </button>
         </div>
@@ -152,15 +263,12 @@ document.addEventListener('DOMContentLoaded', () => {
     currentThreadId = id;
     threadTitle.textContent = title || 'Conversation';
 
-    // Update active highlight in sidebar
     document.querySelectorAll('.thread-item').forEach((el) => {
       el.classList.toggle('active', el.dataset.id === id);
     });
 
-    // Close mobile sidebar if open
     sidebar.classList.remove('open');
 
-    // Fetch thread messages
     try {
       const res = await fetch(`/api/threads.php?id=${id}`);
       const data = await res.json();
@@ -194,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function deleteThread(id) {
-    if (!confirm('Delete this conversation thread?')) return;
+    if (!confirm('Delete this conversation?')) return;
     try {
       await fetch(`/api/threads.php?id=${id}`, { method: 'DELETE' });
       if (currentThreadId === id) {
@@ -209,10 +317,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================================================================
-  // 3. Message Rendering & Markdown Parser
+  // 4. Message Rendering & Markdown Parser
   // =========================================================================
   function renderChatMessages() {
-    // Clear dynamic message rows
     const existingRows = chatContainer.querySelectorAll('.message-row');
     existingRows.forEach((r) => r.remove());
 
@@ -221,13 +328,13 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       welcomeHero.style.display = 'none';
       currentMessages.forEach((msg, idx) => {
-        appendMessageElement(msg.role, msg.content, idx, msg.gold_standard);
+        appendMessageElement(msg.role, msg.content, msg.image || null, idx);
       });
       scrollToBottom();
     }
   }
 
-  function appendMessageElement(role, content, index = null, isGold = false) {
+  function appendMessageElement(role, textContent, imageBase64 = null, index = null) {
     welcomeHero.style.display = 'none';
 
     const row = document.createElement('div');
@@ -243,7 +350,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
-    contentDiv.innerHTML = formatMarkdown(content);
+
+    // If an image was attached by the user, embed the thumbnail
+    if (role === 'user' && imageBase64) {
+      const imgContainer = document.createElement('div');
+      imgContainer.className = 'user-attached-image-container';
+      const img = document.createElement('img');
+      img.className = 'user-attached-image';
+      img.src = imageBase64;
+      img.alt = 'Attached Image';
+      imgContainer.appendChild(img);
+      contentDiv.appendChild(imgContainer);
+    }
+
+    const textWrap = document.createElement('div');
+    textWrap.innerHTML = formatMarkdown(textContent);
+    contentDiv.appendChild(textWrap);
 
     bubble.appendChild(contentDiv);
 
@@ -252,20 +374,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const actionsBar = document.createElement('div');
       actionsBar.className = 'message-actions-bar';
 
-      // Gold Standard Button
-      const btnGold = document.createElement('button');
-      btnGold.className = `btn-msg-action ${isGold ? 'gold-active' : ''}`;
-      btnGold.innerHTML = `⭐ <span>${isGold ? 'Gold Standard' : 'Mark Gold'}</span>`;
-      btnGold.title = 'Add this high-value interaction to the fine-tuning ground truth dataset';
-      btnGold.addEventListener('click', () => toggleGoldStandard(index, btnGold));
-      actionsBar.appendChild(btnGold);
-
-      // Copy Text Button
       const btnCopy = document.createElement('button');
       btnCopy.className = 'btn-msg-action';
       btnCopy.innerHTML = `📋 <span>Copy</span>`;
       btnCopy.addEventListener('click', () => {
-        navigator.clipboard.writeText(content);
+        navigator.clipboard.writeText(textContent);
         btnCopy.innerHTML = `✓ <span>Copied</span>`;
         setTimeout(() => { btnCopy.innerHTML = `📋 <span>Copy</span>`; }, 1800);
       });
@@ -278,40 +391,16 @@ document.addEventListener('DOMContentLoaded', () => {
     row.appendChild(bubble);
     chatContainer.appendChild(row);
 
-    // Setup code block copy buttons
     setupCodeBlockCopy(contentDiv);
 
-    return contentDiv;
-  }
-
-  async function toggleGoldStandard(messageIndex, btn) {
-    if (messageIndex === null || !currentThreadId) return;
-    try {
-      const res = await fetch('/api/threads.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'mark_gold',
-          thread_id: currentThreadId,
-          message_index: messageIndex
-        })
-      });
-      const data = await res.json();
-      if (data.success) {
-        btn.classList.toggle('gold-active', data.is_gold);
-        btn.innerHTML = `⭐ <span>${data.is_gold ? 'Gold Standard' : 'Mark Gold'}</span>`;
-        loadLoreStats();
-      }
-    } catch (e) {
-      console.error('Failed to toggle gold standard:', e);
-    }
+    return textWrap;
   }
 
   // =========================================================================
-  // 4. Chat Send & SSE Streaming
+  // 5. Chat Send & Multimodal Streaming
   // =========================================================================
   async function sendMessage(text) {
-    if (!text || isGenerating) return;
+    if ((!text && !attachedImageBase64) || isGenerating) return;
 
     if (!currentThreadId) {
       await createNewThread();
@@ -322,10 +411,18 @@ document.addEventListener('DOMContentLoaded', () => {
     chatInput.value = '';
     autoResizeTextarea();
 
-    // 1. Optimistic User Message
-    const userMsg = { role: 'user', content: text, timestamp: new Date().toISOString() };
+    const imageToSend = attachedImageBase64;
+    clearAttachedImage();
+
+    // 1. Render User Message
+    const userMsg = {
+      role: 'user',
+      content: text || 'Inspect this image',
+      image: imageToSend,
+      timestamp: new Date().toISOString()
+    };
     currentMessages.push(userMsg);
-    appendMessageElement('user', text, currentMessages.length - 1);
+    appendMessageElement('user', userMsg.content, imageToSend, currentMessages.length - 1);
     scrollToBottom();
 
     // 2. Prepare Assistant Streaming Message
@@ -336,7 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
     scrollToBottom();
 
     let fullText = '';
-    const selectedModel = modelSelect.value;
+    const selectedModel = imageToSend ? 'qwen/qwen3.8-27b' : modelSelect.value;
 
     try {
       const res = await fetch('/api/chat.php', {
@@ -345,6 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({
           thread_id: currentThreadId,
           message: text,
+          image: imageToSend,
           model: selectedModel,
           stream: true
         })
@@ -379,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   scrollToBottom();
                 }
               } catch (err) {
-                // Ignore partial JSON chunks
+                // Ignore partial chunks
               }
             }
           }
@@ -391,46 +489,38 @@ document.addEventListener('DOMContentLoaded', () => {
       assistantContentDiv.innerHTML = formatMarkdown(fullText);
       setupCodeBlockCopy(assistantContentDiv);
 
-      // Record in local state
       const assistantMsg = {
         role: 'assistant',
         content: fullText,
         model: selectedModel,
-        timestamp: new Date().toISOString(),
-        gold_standard: false
+        timestamp: new Date().toISOString()
       };
       currentMessages.push(assistantMsg);
 
-      // Reload thread titles and stats in background
       loadThreads();
-      loadLoreStats();
 
     } catch (err) {
       cursor.remove();
-      assistantContentDiv.innerHTML = `<span style="color: #ef4444;">Error generating response: ${escapeHtml(err.message)}</span>`;
+      assistantContentDiv.innerHTML = `<span style="color: #ef4444;">Error: ${escapeHtml(err.message)}</span>`;
     } finally {
       isGenerating = false;
-      btnSend.disabled = chatInput.value.trim().length === 0;
+      btnSend.disabled = chatInput.value.trim().length === 0 && !attachedImageBase64;
       chatInput.focus();
     }
   }
 
   // =========================================================================
-  // 5. Lore & Overfitting Drawer
+  // 6. Directives & Lore Drawer
   // =========================================================================
-  async function loadLoreStats() {
+  async function loadLore() {
     try {
       const res = await fetch('/api/lore.php');
       const data = await res.json();
       if (data.success) {
-        statInteractions.textContent = data.stats.total_interactions;
-        statGold.textContent = data.stats.gold_standard_pairs;
-        statDatasetSize.textContent = data.stats.dataset_formatted;
-
         renderDirectives(data.lore.directives || []);
       }
     } catch (e) {
-      console.error('Failed to load lore stats:', e);
+      console.error('Failed to load lore:', e);
     }
   }
 
@@ -447,7 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
       card.innerHTML = `
         <div class="directive-header">
           <span class="directive-cat">${escapeHtml(d.category || 'Rule')}</span>
-          <button class="btn-delete-dir" data-id="${d.id}" title="Remove rule">✕</button>
+          <button class="btn-delete-dir" data-id="${d.id}" title="Remove directive">✕</button>
         </div>
         <div class="directive-rule">${escapeHtml(d.rule)}</div>
       `;
@@ -456,7 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation();
         try {
           await fetch(`/api/lore.php?id=${d.id}`, { method: 'DELETE' });
-          loadLoreStats();
+          loadLore();
         } catch (err) {
           console.error(err);
         }
@@ -475,53 +565,50 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch('/api/lore.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ new_directive: val, category: 'Personal Lore' })
+        body: JSON.stringify({ new_directive: val, category: 'Personal Preference' })
       });
       const data = await res.json();
       if (data.success) {
         inputNewDirective.value = '';
-        loadLoreStats();
+        loadLore();
       }
     } catch (err) {
       console.error(err);
     }
   });
 
-  // Drawer Toggles
-  function openDrawer() {
-    loadLoreStats();
+  // Drawer Controls
+  btnOpenLore.addEventListener('click', () => {
+    loadLore();
     drawerOverlay.classList.add('open');
     loreDrawer.classList.add('open');
-  }
+  });
 
-  function closeDrawer() {
+  btnCloseDrawer.addEventListener('click', () => {
     drawerOverlay.classList.remove('open');
     loreDrawer.classList.remove('open');
-  }
+  });
 
-  btnOpenLore.addEventListener('click', openDrawer);
-  btnCloseDrawer.addEventListener('click', closeDrawer);
-  drawerOverlay.addEventListener('click', closeDrawer);
+  drawerOverlay.addEventListener('click', () => {
+    drawerOverlay.classList.remove('open');
+    loreDrawer.classList.remove('open');
+  });
 
   // =========================================================================
-  // 6. UI Interactions & Event Handlers
+  // 7. General Event Listeners
   // =========================================================================
   function setupEventListeners() {
-    // New Chat
     btnNewChat.addEventListener('click', createNewThread);
 
-    // Mobile Toggle
     btnMobileToggle.addEventListener('click', () => {
       sidebar.classList.toggle('open');
     });
 
-    // Model Selector Change
     modelSelect.addEventListener('change', () => {
       const text = modelSelect.options[modelSelect.selectedIndex].text.split('(')[0].trim();
       activeModelBadge.textContent = text;
     });
 
-    // Clear Thread
     btnClearThread.addEventListener('click', () => {
       if (!currentMessages || currentMessages.length === 0) return;
       if (confirm('Clear messages in this conversation?')) {
@@ -530,17 +617,16 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Chat Input Auto-Resize & Key Handling
     chatInput.addEventListener('input', () => {
       autoResizeTextarea();
-      btnSend.disabled = chatInput.value.trim().length === 0 || isGenerating;
+      btnSend.disabled = (chatInput.value.trim().length === 0 && !attachedImageBase64) || isGenerating;
     });
 
     chatInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         const text = chatInput.value.trim();
-        if (text && !isGenerating) {
+        if ((text || attachedImageBase64) && !isGenerating) {
           sendMessage(text);
         }
       }
@@ -548,12 +634,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     btnSend.addEventListener('click', () => {
       const text = chatInput.value.trim();
-      if (text && !isGenerating) {
+      if ((text || attachedImageBase64) && !isGenerating) {
         sendMessage(text);
       }
     });
 
-    // Suggestion Cards Click
     document.querySelectorAll('.suggestion-card').forEach((card) => {
       card.addEventListener('click', () => {
         const prompt = card.dataset.prompt;
@@ -589,15 +674,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // =========================================================================
-  // 7. Lightweight Pure Markdown Parser
-  // =========================================================================
   function formatMarkdown(text) {
     if (!text) return '';
 
     let html = escapeHtml(text);
 
-    // Multi-line code blocks with language and copy header
+    // Multi-line code blocks
     html = html.replace(/```([a-zA-Z0-9_\-#+]*)\n([\s\S]*?)```/g, (match, lang, code) => {
       const language = lang || 'code';
       return `<pre><div class="code-header"><span>${language}</span><button class="btn-copy-code">Copy</button></div><code>${code.trim()}</code></pre>`;
@@ -618,11 +700,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Blockquotes
     html = html.replace(/^\&gt;\s?(.*$)/gim, '<blockquote>$1</blockquote>');
 
-    // Unordered lists
+    // Lists
     html = html.replace(/^\s*[-*]\s+(.*)$/gim, '<li>$1</li>');
     html = html.replace(/(<li>.*<\/li>)/gims, '<ul>$1</ul>');
 
-    // Paragraph line breaks
+    // Paragraphs
     html = html.split('\n\n').map(p => {
       p = p.trim();
       if (!p) return '';
@@ -644,6 +726,6 @@ document.addEventListener('DOMContentLoaded', () => {
       .replace(/'/g, '&#039;');
   }
 
-  // Kickoff
+  // Start Auth Check
   checkAuth();
 });
