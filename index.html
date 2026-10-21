@@ -1,798 +1,237 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Okotune (s)</title>
+  <meta name="description" content="Okotune (s) — Mphathisi Ecosystem">
   
-  <!-- Primary SEO Meta Tags -->
-  <title>OkoTunes — Vibes Without Borders | Next-Gen Music Streamer & Audio Studio</title>
-  <meta name="title" content="OkoTunes — Vibes Without Borders | Next-Gen Music Streamer & Audio Studio" />
-  <meta name="description" content="Explore unlimited beats, curated genre collections, and 3D spatial DSP audio with OkoTunes. Built by Mphathisi Ndlovu (The Teq-master) for the Mphathisi digital innovation ecosystem." />
-  <meta name="keywords" content="OkoTunes, Mphathisi Ndlovu, Teqmaster, Audio Streamer, NUST Zimbabwe, Yallo, SafeNet, Glopkit, Spatial Audio, African Tech, Lo-Fi, Hip Hop, Music Web App" />
-  <meta name="author" content="Mphathisi Ndlovu (The Teq-master)" />
-  <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://okotunes.mphathisi.com" />
+  <!-- Modern Geometric Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Open Graph / Facebook / LinkedIn -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://okotunes.mphathisi.com" />
-  <meta property="og:title" content="OkoTunes — Vibes Without Borders" />
-  <meta property="og:description" content="Explore unlimited beats, curated genre collections, and 3D spatial DSP audio with OkoTunes. Built by Mphathisi Ndlovu (The Teq-master)." />
-  <meta property="og:image" content="assets/hero_artist.jpg" />
-  <meta property="og:site_name" content="OkoTunes" />
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  <!-- Twitter Meta Tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:url" content="https://okotunes.mphathisi.com" />
-  <meta name="twitter:title" content="OkoTunes — Vibes Without Borders" />
-  <meta name="twitter:description" content="Next-gen spatial audio streamer and beat showcase by Mphathisi Ndlovu." />
-  <meta name="twitter:image" content="assets/hero_artist.jpg" />
+    :root {
+      --bg: #07080c;
+      --text-main: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.65);
+      --accent-glow-1: rgba(99, 102, 241, 0.18);
+      --accent-glow-2: rgba(236, 72, 153, 0.12);
+      --accent-glow-3: rgba(14, 165, 233, 0.12);
+      --glass-bg: rgba(255, 255, 255, 0.035);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-hover-bg: rgba(255, 255, 255, 0.08);
+      --glass-hover-border: rgba(255, 255, 255, 0.25);
+    }
 
-  <!-- Favicon & Icons -->
-  <link rel="icon" type="image/png" href="assets/okotunes logo.png" />
-  <link rel="apple-touch-icon" href="assets/okotunes logo.png" />
+    body {
+      min-height: 100vh;
+      width: 100%;
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    /* Ambient atmospheric glow */
+    .ambient-mesh {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
 
-  <!-- Core Stylesheet -->
-  <link rel="stylesheet" href="styles.css" />
+    .ambient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.85;
+      animation: floatPulse 18s ease-in-out infinite alternate;
+    }
 
-  <!-- JSON-LD Schema (Ecosystem & Author Indexing) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Person",
-        "@id": "https://mphathisi.com/#person",
-        "name": "Mphathisi Ndlovu",
-        "alternateName": ["Teqmaster", "The Teq-master", "Sir Mphatic", "teqmaster-cyber"],
-        "jobTitle": "Software Engineer & Computer Science Innovator",
-        "worksFor": {
-          "@type": "CollegeOrUniversity",
-          "name": "National University of Science and Technology (NUST)"
-        },
-        "url": "https://mphathisi.com"
-      },
-      {
-        "@type": "SoftwareApplication",
-        "name": "OkoTunes Audio Streamer",
-        "applicationCategory": "MultimediaApplication",
-        "operatingSystem": "Web Browser",
-        "url": "https://okotunes.mphathisi.com",
-        "author": { "@id": "https://mphathisi.com/#person" },
-        "description": "High-performance music streamer and Web Audio spatial soundscape engine."
+    .orb-1 {
+      width: 550px;
+      height: 550px;
+      top: 15%;
+      left: 20%;
+      background: radial-gradient(circle, var(--accent-glow-1) 0%, transparent 70%);
+    }
+
+    .orb-2 {
+      width: 600px;
+      height: 600px;
+      bottom: 10%;
+      right: 15%;
+      background: radial-gradient(circle, var(--accent-glow-2) 0%, transparent 70%);
+      animation-delay: -6s;
+    }
+
+    .orb-3 {
+      width: 450px;
+      height: 450px;
+      top: 40%;
+      right: 35%;
+      background: radial-gradient(circle, var(--accent-glow-3) 0%, transparent 70%);
+      animation-delay: -11s;
+    }
+
+    @keyframes floatPulse {
+      0% {
+        transform: translate(0, 0) scale(1);
       }
-    ]
-  }
-  </script>
+      50% {
+        transform: translate(40px, -30px) scale(1.08);
+      }
+      100% {
+        transform: translate(-30px, 40px) scale(0.95);
+      }
+    }
+
+    /* Subtle geometric grid backdrop overlay */
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+      -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Center Stage Container */
+    main.center-stage {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      user-select: none;
+    }
+
+    /* Main Centerpiece Title */
+    h1.brand-title {
+      font-size: clamp(2.8rem, 9vw, 7.5rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.05;
+      background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 45%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 10px 40px rgba(0, 0, 0, 0.6));
+      position: relative;
+      cursor: default;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+      animation: entranceGlow 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    h1.brand-title:hover {
+      transform: scale(1.02);
+      filter: drop-shadow(0 0 50px rgba(255, 255, 255, 0.25));
+    }
+
+    @keyframes entranceGlow {
+      0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Bottom Corner Link */
+    .bottom-corner {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 20;
+    }
+
+    .corner-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--text-muted);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 9999px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .corner-link:hover {
+      color: #ffffff;
+      background: var(--glass-hover-bg);
+      border-color: var(--glass-hover-border);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.25);
+    }
+
+    .corner-link:active {
+      transform: translateY(0);
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 640px) {
+      .bottom-corner {
+        bottom: 1.5rem;
+        right: 1.5rem;
+      }
+      .corner-link {
+        padding: 0.55rem 1rem;
+        font-size: 0.78rem;
+        letter-spacing: 0.18em;
+      }
+    }
+  </style>
 </head>
 <body>
-
-  <!-- Ambient Glowing Background Lights -->
-  <div class="bg-ambient-lights" aria-hidden="true">
-    <div class="ambient-blob blob-1"></div>
-    <div class="ambient-blob blob-2"></div>
-    <div class="ambient-blob blob-3"></div>
+  <!-- Ambient Atmospheric Lighting -->
+  <div class="ambient-mesh" aria-hidden="true">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
   </div>
 
-  <!-- Top Floating Pill Navigation -->
-  <div class="header-wrapper">
-    <nav class="nav-pill" aria-label="Main Navigation">
-      <a href="#home" class="brand">
-        <div class="brand-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
-        </div>
-        <div class="brand-text">Oko<span>Tunes</span></div>
-      </a>
+  <div class="bg-grid" aria-hidden="true"></div>
 
-      <ul class="nav-links">
-        <li><a href="#home" class="nav-link active">Home</a></li>
-        <li><a href="#tracks" class="nav-link">New arrival</a></li>
-        <li><a href="#library" class="nav-link">Library</a></li>
-        <li><a href="#ecosystem" class="nav-link" id="btnNavEco">Ecosystem</a></li>
-        <li><a href="#pricing" class="nav-link">Pricing</a></li>
-      </ul>
-
-      <div class="nav-actions">
-        <a href="https://mphathisi.com" target="_blank" rel="noopener" class="btn-ghost-nav">Mphathisi Hub</a>
-        <button class="btn-pill-primary" id="btnNavLaunch" data-open-modal="signup">
-          <span>Sign Up</span>
-        </button>
-        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Menu">
-          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
-      </div>
-    </nav>
-  </div>
-
-  <!-- Main Content Container -->
-  <main>
-    <!-- Section 1: Hero ("Vibes Without Borders") -->
-    <section class="hero-section" id="home">
-      <div class="container">
-        <div class="hero-grid">
-          <!-- Left Column -->
-          <div class="hero-content">
-            <div class="hero-badge-pill">
-              <span class="hero-badge-dot"></span>
-              <span>Next-Gen Audio Experience</span>
-            </div>
-
-            <h1 class="hero-title">
-              Vibes Without<br />
-              <span class="text-gradient">Borders</span>
-            </h1>
-
-            <p class="hero-subtitle">
-              Vibes Without Borders lets you explore every beat and genre, anywhere you are. Music without limits, just pure connection.
-            </p>
-
-            <!-- Stats Row -->
-            <div class="hero-stats-row">
-              <div class="stat-item">
-                <div class="stat-header">
-                  <span class="stat-icon">🎵</span>
-                  <span class="stat-num">2000+</span>
-                </div>
-                <div class="stat-label">Songs & Beats</div>
-              </div>
-
-              <div class="stat-item">
-                <div class="stat-header">
-                  <span class="stat-icon">👤</span>
-                  <span class="stat-num">300+</span>
-                </div>
-                <div class="stat-label">Exclusive Singers</div>
-              </div>
-
-              <div class="stat-item">
-                <div class="stat-header">
-                  <span class="stat-icon">💿</span>
-                  <span class="stat-num">600+</span>
-                </div>
-                <div class="stat-label">Albums</div>
-              </div>
-            </div>
-
-            <!-- CTA Buttons -->
-            <div class="hero-cta-group">
-              <button class="btn-hero-primary" id="btnStartListening">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>
-                <span>Start Listening</span>
-              </button>
-
-              <button class="btn-hero-secondary" id="btnExploreEco">
-                <span>Explore Ecosystem</span>
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- Right Column (Hero Visual Artwork) -->
-          <div class="hero-visual-wrapper">
-            <div class="hero-art-card">
-              <div class="hero-art-glow"></div>
-              <img src="assets/hero_artist.jpg" alt="Vibes Without Borders Artist" class="hero-art-img" />
-            </div>
-
-            <!-- Float Badges -->
-            <div class="hero-float-badge badge-top-left">
-              <div class="badge-icon">🎧</div>
-              <div>
-                <div class="badge-text-primary">Spatial 3D DSP</div>
-                <div class="badge-text-sub">Binaural Studio Engine</div>
-              </div>
-            </div>
-
-            <div class="hero-float-badge badge-bottom-right">
-              <div class="badge-icon">⚡</div>
-              <div>
-                <div class="badge-text-primary">Zero Latency</div>
-                <div class="badge-text-sub">Web Audio Synthesizer</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 2: This Week's Fire Track (OkoTunes Flow's Choice) -->
-    <section class="fire-tracks-section" id="tracks">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Curated Highlights</span>
-          <h2 class="section-title">
-            This Week’s Fire Track<br />
-            <span style="color: var(--text-muted); font-weight: 500;">: Music Flow’s Choice</span>
-          </h2>
-          <p class="section-desc">
-            Discover the track everyone's talking about. Each week, Music Flow highlights one song that's heating up the charts and playlists. Press play, turn it up, and ride the vibe.
-          </p>
-        </div>
-
-        <!-- 3 Prominent Album Cards -->
-        <div class="fire-cards-grid">
-          <!-- Card 1: Crazy Frog -->
-          <article class="fire-card" data-track-id="crazy_frog">
-            <div class="track-cover-box">
-              <img src="assets/track_crazy_frog.jpg" alt="Crazy Frog - Jamie Chastain" class="track-cover-img" />
-              <div class="play-btn-overlay">
-                <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
-              </div>
-            </div>
-            <div class="track-info">
-              <h3 class="track-name">Crazy Frog</h3>
-              <p class="track-artist">Jamie Chastain</p>
-              <div class="track-meta-row">
-                <span class="listeners-badge">
-                  <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12v6c0 1.1.9 2 2 2h2v-8H4v-2c0-4.41 3.59-8 8-8s8 3.59 8 8v2h-2v8h2c1.1 0 2-.9 2-2v-6c0-5.52-4.48-10-10-10z"/></svg>
-                  20K listeners
-                </span>
-                <span>3:42</span>
-              </div>
-            </div>
-          </article>
-
-          <!-- Card 2: Voice (Centerpiece) -->
-          <article class="fire-card card-featured" data-track-id="voice">
-            <div class="track-cover-box">
-              <span class="featured-badge">NEW ALBUM RELEASE</span>
-              <img src="assets/track_voice.jpg" alt="Voice - Samira" class="track-cover-img" />
-              <div class="play-btn-overlay">
-                <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
-              </div>
-            </div>
-            <div class="track-info">
-              <h3 class="track-name">Voice</h3>
-              <p class="track-artist">Samira</p>
-              <div class="track-meta-row">
-                <span class="listeners-badge" style="color: var(--primary-pink); font-weight: 700;">
-                  <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12v6c0 1.1.9 2 2 2h2v-8H4v-2c0-4.41 3.59-8 8-8s8 3.59 8 8v2h-2v8h2c1.1 0 2-.9 2-2v-6c0-5.52-4.48-10-10-10z"/></svg>
-                  70K listeners
-                </span>
-                <span>4:05</span>
-              </div>
-            </div>
-          </article>
-
-          <!-- Card 3: Rise 2 Top -->
-          <article class="fire-card" data-track-id="rise_top">
-            <div class="track-cover-box">
-              <img src="assets/track_rise_top.jpg" alt="Rise 2 Top - Alex" class="track-cover-img" />
-              <div class="play-btn-overlay">
-                <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
-              </div>
-            </div>
-            <div class="track-info">
-              <h3 class="track-name">Rise 2 Top</h3>
-              <p class="track-artist">Alex</p>
-              <div class="track-meta-row">
-                <span class="listeners-badge">
-                  <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12v6c0 1.1.9 2 2 2h2v-8H4v-2c0-4.41 3.59-8 8-8s8 3.59 8 8v2h-2v8h2c1.1 0 2-.9 2-2v-6c0-5.52-4.48-10-10-10z"/></svg>
-                  40K listeners
-                </span>
-                <span>3:18</span>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 3: Infinite Music Library (Genre Slider) -->
-    <section class="library-section" id="library">
-      <div class="container">
-        <div class="library-nav-row">
-          <div class="library-header">
-            <span class="section-tag">Sound Categories</span>
-            <h2 class="section-title">Your Infinite Music Library</h2>
-            <p class="section-desc">Stream, search, and save your favorite tracks. Discover new vibes every day, all in one place.</p>
-          </div>
-
-          <div class="carousel-nav-btns">
-            <button class="btn-carousel-arrow" id="btnPrevCarousel" aria-label="Previous Genre">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-            </button>
-            <button class="btn-carousel-arrow" id="btnNextCarousel" aria-label="Next Genre">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- Horizontal Scrollable Genre Grid -->
-        <div class="genres-grid" id="genresGrid">
-          <!-- Hip Hop -->
-          <div class="genre-card" data-genre="Hip Hop">
-            <img src="assets/genre_hiphop.jpg" alt="Hip Hop" class="genre-bg-img" />
-            <div class="genre-overlay"></div>
-            <div class="genre-play-pill">
-              <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
-            </div>
-            <div class="genre-content">
-              <h3 class="genre-title">Hip Hop</h3>
-              <div class="genre-count">🎵 412 songs</div>
-            </div>
-          </div>
-
-          <!-- Lo-Fi -->
-          <div class="genre-card" data-genre="Lo-Fi">
-            <img src="assets/genre_lofi.jpg" alt="Lo-Fi" class="genre-bg-img" />
-            <div class="genre-overlay"></div>
-            <div class="genre-play-pill">
-              <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
-            </div>
-            <div class="genre-content">
-              <h3 class="genre-title">Lo - Fi</h3>
-              <div class="genre-count">🎵 600 songs</div>
-            </div>
-          </div>
-
-          <!-- Rock & Roll -->
-          <div class="genre-card" data-genre="Rock & Roll">
-            <img src="assets/genre_rock.jpg" alt="Rock & Roll" class="genre-bg-img" />
-            <div class="genre-overlay"></div>
-            <div class="genre-play-pill">
-              <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
-            </div>
-            <div class="genre-content">
-              <h3 class="genre-title">Rock & Roll</h3>
-              <div class="genre-count">🎵 312 songs</div>
-            </div>
-          </div>
-
-          <!-- R & B -->
-          <div class="genre-card" data-genre="R & B">
-            <img src="assets/genre_rnb.jpg" alt="R & B" class="genre-bg-img" />
-            <div class="genre-overlay"></div>
-            <div class="genre-play-pill">
-              <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
-            </div>
-            <div class="genre-content">
-              <h3 class="genre-title">R & B</h3>
-              <div class="genre-count">🎵 612 songs</div>
-            </div>
-          </div>
-
-          <!-- Afrobeats & Amapiano -->
-          <div class="genre-card" data-genre="Afrobeats">
-            <img src="assets/genre_afrobeats.jpg" alt="Afrobeats & Amapiano" class="genre-bg-img" />
-            <div class="genre-overlay"></div>
-            <div class="genre-play-pill">
-              <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
-            </div>
-            <div class="genre-content">
-              <h3 class="genre-title">Afrobeats</h3>
-              <div class="genre-count">🎵 580 songs</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 4: Mphathisi & Teqmaster Ecosystem Hub -->
-    <section class="ecosystem-section" id="ecosystem">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Integrated Ecosystem</span>
-          <h2 class="section-title">The Mphathisi Innovation Hub</h2>
-          <p class="section-desc">
-            OkoTunes is part of Mphathisi Ndlovu's (The Teq-master) interconnected digital platform suite at NUST Zimbabwe, bridging AI companions, spatial audio, and campus security.
-          </p>
-        </div>
-
-        <div class="eco-banner-grid">
-          <!-- Hub Master -->
-          <div class="eco-card">
-            <div>
-              <div class="eco-card-header">
-                <div class="eco-icon-box icon-box-pink">🌐</div>
-                <span class="status-pill-live"><span class="status-dot-live"></span> MASTER HUB</span>
-              </div>
-              <h3 class="eco-title">mphathisi.com</h3>
-              <p class="eco-desc">Official identity gateway and project launchpad for full-stack engineer Mphathisi Ndlovu.</p>
-              <div class="eco-tags">
-                <span class="tag-badge">Master Hub</span>
-                <span class="tag-badge">NUST Portfolio</span>
-              </div>
-            </div>
-            <a href="https://mphathisi.com" target="_blank" rel="noopener" class="eco-link-action">
-              <span>Visit mphathisi.com</span>
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-          </div>
-
-          <!-- Yallo AI -->
-          <div class="eco-card">
-            <div>
-              <div class="eco-card-header">
-                <div class="eco-icon-box icon-box-cyan">🤖</div>
-                <span class="status-pill-live"><span class="status-dot-live"></span> AI LIVE</span>
-              </div>
-              <h3 class="eco-title">Yallo AI Companion</h3>
-              <p class="eco-desc">Autonomous learning companion tailored for computer science students and active recall memory drills.</p>
-              <div class="eco-tags">
-                <span class="tag-badge">AI Assistant</span>
-                <span class="tag-badge">Python / FastAPI</span>
-              </div>
-            </div>
-            <a href="https://idevmight.mphathisi.com" target="_blank" rel="noopener" class="eco-link-action">
-              <span>Launch Yallo AI</span>
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-          </div>
-
-          <!-- SafeNet Security -->
-          <div class="eco-card">
-            <div>
-              <div class="eco-card-header">
-                <div class="eco-icon-box icon-box-purple">🛡️</div>
-                <span class="status-pill-live"><span class="status-dot-live"></span> CAMPUS SEC</span>
-              </div>
-              <h3 class="eco-title">SafeNet NUST</h3>
-              <p class="eco-desc">Real-time emergency incident response and campus threat dispatch platform engineered for students.</p>
-              <div class="eco-tags">
-                <span class="tag-badge">Campus Safety</span>
-                <span class="tag-badge">Realtime Dispatch</span>
-              </div>
-            </div>
-            <a href="https://cv.mphathisi.com" target="_blank" rel="noopener" class="eco-link-action">
-              <span>Explore SafeNet</span>
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 5: Interactive Audio Studio Visualizer Canvas -->
-    <section class="studio-section" id="studio">
-      <div class="container">
-        <div class="studio-card">
-          <div class="studio-header-row">
-            <div>
-              <span class="section-tag">Audio DSP Engine</span>
-              <h2 style="font-size: 1.8rem; margin-top: 4px;">Live Frequency Spectrum & Spatial Lab</h2>
-            </div>
-            <div style="font-size: 0.85rem; color: var(--text-muted);">
-              Web Audio API • 3D Binaural DSP
-            </div>
-          </div>
-
-          <!-- Canvas Visualizer -->
-          <div class="visualizer-canvas-box">
-            <canvas id="visualizerCanvas"></canvas>
-          </div>
-
-          <!-- DSP Effect Toggles -->
-          <div class="studio-controls-grid">
-            <div class="studio-toggle-box active" id="toggleSpatial">
-              <div>
-                <div class="toggle-title">Spatial 3D Pan</div>
-                <div class="toggle-sub">Dynamic binaural field</div>
-              </div>
-              <div class="toggle-switch"></div>
-            </div>
-
-            <div class="studio-toggle-box active" id="toggleBass">
-              <div>
-                <div class="toggle-title">Bass Boost +6dB</div>
-                <div class="toggle-sub">Low-shelf equalizer</div>
-              </div>
-              <div class="toggle-switch"></div>
-            </div>
-
-            <div class="studio-toggle-box" id="toggleVinyl">
-              <div>
-                <div class="toggle-title">Lo-Fi Warmth</div>
-                <div class="toggle-sub">Analog saturation</div>
-              </div>
-              <div class="toggle-switch"></div>
-            </div>
-
-            <div class="studio-toggle-box active" id="toggleArp">
-              <div>
-                <div class="toggle-title">Synth Arpeggiator</div>
-                <div class="toggle-sub">Procedural chords</div>
-              </div>
-              <div class="toggle-switch"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 6: Membership & Passes -->
-    <section class="pricing-section" id="pricing">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Access Plans</span>
-          <h2 class="section-title">Music Without Limits</h2>
-          <p class="section-desc">Unlock hi-res master streams, spatial audio mixes, and offline library access.</p>
-        </div>
-
-        <div class="pricing-grid">
-          <!-- Tier 1: Community Free -->
-          <div class="pricing-card">
-            <h3 class="tier-name">Student Community</h3>
-            <div class="tier-price-row">
-              <span class="tier-price">Free</span>
-              <span class="tier-period">/ forever</span>
-            </div>
-            <p class="tier-desc">Open access for all NUST students, researchers, and African developers.</p>
-            <ul class="tier-features">
-              <li class="tier-feature-item">
-                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                Unlimited Web Streamer
-              </li>
-              <li class="tier-feature-item">
-                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                Curated Genre Playlists
-              </li>
-              <li class="tier-feature-item">
-                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                Ecosystem Hub SSO
-              </li>
-            </ul>
-            <button class="btn-pricing-action btn-pricing-ghost" data-open-modal="signup">Get Free Access</button>
-          </div>
-
-          <!-- Tier 2: Pro Creator (Featured) -->
-          <div class="pricing-card card-featured">
-            <span class="featured-badge" style="position: static; display: inline-block; margin-bottom: 12px; width: fit-content;">RECOMMENDED</span>
-            <h3 class="tier-name">Pro Creator</h3>
-            <div class="tier-price-row">
-              <span class="tier-price">$9.99</span>
-              <span class="tier-period">/ month</span>
-            </div>
-            <p class="tier-desc">Master lossless FLAC audio, 3D spatial DSP, and offline cache.</p>
-            <ul class="tier-features">
-              <li class="tier-feature-item">
-                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                Lossless 24-bit / 96kHz Master
-              </li>
-              <li class="tier-feature-item">
-                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                3D Spatial Audio & Equalizer
-              </li>
-              <li class="tier-feature-item">
-                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                Zero-Ads Listening
-              </li>
-              <li class="tier-feature-item">
-                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                Direct Artist Tip Support
-              </li>
-            </ul>
-            <button class="btn-pricing-action btn-pricing-gradient" data-open-modal="signup">Start 14-Day Free Trial</button>
-          </div>
-
-          <!-- Tier 3: Studio Spatial VIP -->
-          <div class="pricing-card">
-            <h3 class="tier-name">Studio Spatial VIP</h3>
-            <div class="tier-price-row">
-              <span class="tier-price">$19.99</span>
-              <span class="tier-period">/ month</span>
-            </div>
-            <p class="tier-desc">Designed for sound engineers, producers, and creative studios.</p>
-            <ul class="tier-features">
-              <li class="tier-feature-item">
-                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                Multi-Stem Audio Downloads
-              </li>
-              <li class="tier-feature-item">
-                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                Custom DSP Shader Presets
-              </li>
-              <li class="tier-feature-item">
-                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                Dedicated Cloudflare R2 Egress
-              </li>
-            </ul>
-            <button class="btn-pricing-action btn-pricing-ghost" data-open-modal="signup">Join Studio VIP</button>
-          </div>
-        </div>
-      </div>
-    </section>
+  <!-- Center Stage -->
+  <main class="center-stage">
+    <h1 class="brand-title">Okotune (s)</h1>
   </main>
 
-  <!-- Persistent Floating Bottom Music Player Dock -->
-  <div class="player-dock-wrapper">
-    <div class="player-dock" id="playerDock">
-      <!-- Left Track Meta -->
-      <div class="player-track-meta">
-        <div class="player-thumb-box">
-          <img src="assets/track_voice.jpg" alt="Track thumbnail" id="dockThumb" class="player-thumb-img" />
-        </div>
-        <div class="player-text-box">
-          <div class="player-track-title" id="dockTitle">Voice</div>
-          <div class="player-track-artist" id="dockArtist">Samira • Synth-Pop Nights</div>
-        </div>
-      </div>
-
-      <!-- Center Playback Controls -->
-      <div class="player-center-controls">
-        <div class="player-btn-row">
-          <button class="btn-ctrl" id="dockPrevBtn" aria-label="Previous Track">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><polygon points="19,20 9,12 19,4"/><rect x="5" y="4" width="2" height="16"/></svg>
-          </button>
-
-          <button class="btn-ctrl-play" id="dockPlayBtn" aria-label="Play or Pause">
-            <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
-          </button>
-
-          <button class="btn-ctrl" id="dockNextBtn" aria-label="Next Track">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><polygon points="5,4 15,12 5,20"/><rect x="17" y="4" width="2" height="16"/></svg>
-          </button>
-        </div>
-
-        <!-- Scrubber -->
-        <div class="player-scrub-row">
-          <span class="time-label" id="timeCurrent">0:00</span>
-          <div class="scrub-track" id="scrubTrack">
-            <div class="scrub-progress" id="scrubProgress">
-              <div class="scrub-handle"></div>
-            </div>
-          </div>
-          <span class="time-label" id="timeTotal">3:15</span>
-        </div>
-      </div>
-
-      <!-- Right Visualizer & Volume Dock -->
-      <div class="player-right-dock">
-        <div class="equalizer-bars-dock" aria-label="Visualizer Animation">
-          <div class="eq-bar"></div>
-          <div class="eq-bar"></div>
-          <div class="eq-bar"></div>
-          <div class="eq-bar"></div>
-        </div>
-
-        <div class="volume-slider-box">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="var(--text-muted)"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-          <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="0.7" aria-label="Volume Slider" />
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal: Ecosystem Hub -->
-  <div class="modal-overlay" id="ecoModal" role="dialog" aria-modal="true">
-    <div class="modal-container">
-      <button class="modal-close-btn" aria-label="Close modal">✕</button>
-      <h3 style="font-size: 1.5rem; margin-bottom: 8px;">Mphathisi Ndlovu Ecosystem</h3>
-      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Explore operational platforms and applications created by The Teq-master.</p>
-
-      <div style="display: flex; flex-direction: column; gap: 14px;">
-        <a href="https://mphathisi.com" target="_blank" rel="noopener" class="eco-card" style="padding: 16px; flex-direction: row; align-items: center; justify-content: space-between;">
-          <div>
-            <div style="font-weight: 700; color: #fff;">mphathisi.com</div>
-            <div style="font-size: 0.8rem; color: var(--text-dim);">Official Digital Master Identity Hub</div>
-          </div>
-          <span style="color: var(--primary-pink); font-size: 0.85rem; font-weight: 700;">Open →</span>
-        </a>
-
-        <a href="https://idevmight.mphathisi.com" target="_blank" rel="noopener" class="eco-card" style="padding: 16px; flex-direction: row; align-items: center; justify-content: space-between;">
-          <div>
-            <div style="font-weight: 700; color: #fff;">Yallo AI Companion</div>
-            <div style="font-size: 0.8rem; color: var(--text-dim);">AI-powered study & code companion</div>
-          </div>
-          <span style="color: var(--primary-cyan); font-size: 0.85rem; font-weight: 700;">Launch →</span>
-        </a>
-
-        <a href="https://cv.mphathisi.com" target="_blank" rel="noopener" class="eco-card" style="padding: 16px; flex-direction: row; align-items: center; justify-content: space-between;">
-          <div>
-            <div style="font-weight: 700; color: #fff;">SafeNet NUST Dispatch</div>
-            <div style="font-size: 0.8rem; color: var(--text-dim);">Campus emergency safety system</div>
-          </div>
-          <span style="color: var(--primary-purple); font-size: 0.85rem; font-weight: 700;">View →</span>
-        </a>
-
-        <a href="https://github.com/theteqmaster-cyber" target="_blank" rel="noopener" class="eco-card" style="padding: 16px; flex-direction: row; align-items: center; justify-content: space-between;">
-          <div>
-            <div style="font-weight: 700; color: #fff;">GitHub @theteqmaster-cyber</div>
-            <div style="font-size: 0.8rem; color: var(--text-dim);">Open source repositories and software</div>
-          </div>
-          <span style="color: var(--primary-emerald); font-size: 0.85rem; font-weight: 700;">GitHub →</span>
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal: Sign Up / Community Early Access -->
-  <div class="modal-overlay" id="signupModal" role="dialog" aria-modal="true">
-    <div class="modal-container">
-      <button class="modal-close-btn" aria-label="Close modal">✕</button>
-      <h3 style="font-size: 1.5rem; margin-bottom: 8px;">Join OkoTunes Studio</h3>
-      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">
-        Get instant access to curated spatial audio tracks and early features.
-      </p>
-
-      <form onsubmit="event.preventDefault(); alert('Welcome to OkoTunes! Starting stream...'); document.getElementById('signupModal').classList.remove('open'); document.getElementById('btnStartListening').click();">
-        <div style="margin-bottom: 16px;">
-          <label style="font-size: 0.82rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Your Name</label>
-          <input type="text" placeholder="e.g. Mphathisi" required style="width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-medium); border-radius: var(--radius-md); color: #fff; outline: none; font-size: 0.95rem;" />
-        </div>
-
-        <div style="margin-bottom: 24px;">
-          <label style="font-size: 0.82rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Email Address</label>
-          <input type="email" placeholder="dev@mphathisi.com" required style="width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-medium); border-radius: var(--radius-md); color: #fff; outline: none; font-size: 0.95rem;" />
-        </div>
-
-        <button type="submit" class="btn-pill-primary" style="width: 100%; justify-content: center; padding: 14px; font-size: 1rem;">
-          Start Free Access
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="footer-section">
-    <div class="container">
-      <div class="footer-grid">
-        <!-- Brand Info -->
-        <div>
-          <div class="brand" style="margin-bottom: 10px;">
-            <div class="brand-icon">
-              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
-            </div>
-            <div class="brand-text">Oko<span>Tunes</span></div>
-          </div>
-          <p class="footer-brand-desc">
-            Next-generation music streaming experience with real-time Web Audio synthesis, 3D binaural spatial DSP, and infinite sound library.
-          </p>
-        </div>
-
-        <!-- Ecosystem Links -->
-        <div>
-          <h4 class="footer-heading">Subdomains</h4>
-          <ul class="footer-links-list">
-            <li><a href="https://mphathisi.com" target="_blank" rel="noopener" class="footer-link">mphathisi.com</a></li>
-            <li><a href="https://okotunes.mphathisi.com" class="footer-link">okotunes.mphathisi.com</a></li>
-            <li><a href="https://idevmight.mphathisi.com" target="_blank" rel="noopener" class="footer-link">idevmight.mphathisi.com</a></li>
-            <li><a href="https://studybreak.mphathisi.com" target="_blank" rel="noopener" class="footer-link">studybreak.mphathisi.com</a></li>
-            <li><a href="https://notak.mphathisi.com" target="_blank" rel="noopener" class="footer-link">notak.mphathisi.com</a></li>
-          </ul>
-        </div>
-
-        <!-- Featured Projects -->
-        <div>
-          <h4 class="footer-heading">Ecosystem</h4>
-          <ul class="footer-links-list">
-            <li><a href="https://idevmight.mphathisi.com" target="_blank" rel="noopener" class="footer-link">Yallo AI Companion</a></li>
-            <li><a href="https://cv.mphathisi.com" target="_blank" rel="noopener" class="footer-link">SafeNet NUST Security</a></li>
-            <li><a href="https://github.com/theteqmaster-cyber" target="_blank" rel="noopener" class="footer-link">Glopkit UI Bible</a></li>
-            <li><a href="https://studybreak.mphathisi.com" target="_blank" rel="noopener" class="footer-link">StudyBreak Hub</a></li>
-          </ul>
-        </div>
-
-        <!-- Contact & Developer -->
-        <div>
-          <h4 class="footer-heading">Connect</h4>
-          <ul class="footer-links-list">
-            <li><a href="mailto:dev@mphathisi.com" class="footer-link">dev@mphathisi.com</a></li>
-            <li><a href="mailto:theteqmaster@gmail.com" class="footer-link">theteqmaster@gmail.com</a></li>
-            <li><a href="https://github.com/theteqmaster-cyber" target="_blank" rel="noopener" class="footer-link">GitHub Profile</a></li>
-            <li><span class="status-pill-live" style="margin-top: 8px;"><span class="status-dot-live"></span> Operational</span></li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Bottom Row -->
-      <div class="footer-bottom-row">
-        <div>
-          © 2026 OkoTunes. Designed & Engineered by <a href="https://mphathisi.com" target="_blank" rel="noopener" style="color: #fff; font-weight: 600;">Mphathisi Ndlovu (The Teq-master)</a>.
-        </div>
-        <div>
-          National University of Science and Technology (NUST) • Bulawayo, Zimbabwe
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Core JavaScript -->
-  <script src="app.js"></script>
+  <!-- Bottom Corner Link -->
+  <aside class="bottom-corner">
+    <a href="https://mphathisi.com" target="_blank" rel="noopener noreferrer" class="corner-link" title="Visit mphathisi.com">
+      M.P.A.S
+    </a>
+  </aside>
 </body>
 </html>

@@ -1,8 +1,0 @@
-services:
-  - type: web
-    name: okotunes
-    env: docker
-    dockerfilePath: Dockerfile
-    plan: free
-    region: oregon
-    healthCheckPath: /
