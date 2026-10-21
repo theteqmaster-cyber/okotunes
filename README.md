@@ -1,18 +1,28 @@
-# 🎵 Okotune (s)
+# 🧠 Okotune (s) — Sovereign AI Studio
 
-A minimal, high-aesthetic single-page landing site for **Okotune (s)**, part of the [mphathisi.com](https://mphathisi.com) digital ecosystem.
+> **Okotune (s)** is a private, high-speed sovereign intelligence studio designed specifically for **Mphathisi Ndlovu (The Teq-master)** and the **M.P.A.S ecosystem** ([mphathisi.com](https://mphathisi.com)).
 
-## 🔗 Links
+---
 
-- **Main Identity Hub**: [mphathisi.com](https://mphathisi.com)
-- **Live Deployment**: [okotunes.mphathisi.com](https://okotunes.mphathisi.com)
+## 🎯 The "Intentional Overfitting" Engine
 
-## 🛠️ Stack
+Unlike generic public AI models (ChatGPT, Gemini) that generalize for millions of strangers, **Okotune AI** is built on **intentional overfitting**:
+- **Continuous Personal Harvesting**: Every prompt, architectural preference, and code solution is logged into a structured fine-tuning dataset (`training_dataset.jsonl`).
+- **Gold-Standard Tagging**: 1-click flagging of peak interactions as ground-truth exemplars for LoRA model weights.
+- **Dynamic Lore Injection**: Automatically weaves the M.P.A.S Constitution, ecosystem subdomains (`mphathisi.com`, `notak2`, `safenet`, `yallo`), and your coding standards into every inference turn.
+- **Cloudflare R2 Synchronization**: Live backup of datasets and transcripts to your `notak2` storage bucket.
 
-- Pure HTML5 & Modern CSS
-- Zero build tools or runtime dependencies
-- Deployable natively on any static web host (Vercel, GitHub Pages, Render, Cloudflare Pages)
+---
+
+## ⚡ Tech Stack & Architecture
+
+- **AI Inference**: Groq LPU (Sub-100ms latency on `Qwen 3.8 27B` & `GPT-OSS 120B`)
+- **Backend**: Native Modern PHP (Zero heavy frameworks, pure SSE streaming, pure PHP AWS SigV4 R2 sync)
+- **Frontend**: Obsidian Dark Mode, Vanilla CSS glassmorphism, responsive clamp typography, pure ES6 streaming client
+- **Deployment**: Docker Web Service on Render (High-performance PHP 8.3 Alpine environment)
+
+---
 
 ## 👤 Author
 
-Developed by **Mphathisi Ndlovu** ([M.P.A.S](https://mphathisi.com)).
+Architected & Developed by **Mphathisi Ndlovu** ([M.P.A.S](https://mphathisi.com)).

@@ -2,7 +2,10 @@
 .env
 .env.*
 
-# Local caches and data
+# Local caches and dynamic data
 cache/
-data/
+data/chats/
+data/*.jsonl
+data/*.sqlite
 *.sqlite
+!data/lore.json

@@ -3,535 +3,283 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Okotune (s)</title>
-  <meta name="description" content="Okotune (s) — Mphathisi Ecosystem">
+  <title>Okotune (s) — Sovereign AI</title>
+  <meta name="description" content="Private Sovereign AI Studio for Mphathisi Ndlovu and the M.P.A.S Ecosystem. Overfitting Engine powered by Groq.">
   
-  <!-- Modern Geometric Typography -->
+  <!-- Modern Geometric & Monospace Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <style>
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --bg: #07080c;
-      --text-main: #ffffff;
-      --text-muted: rgba(255, 255, 255, 0.65);
-      --accent-glow-1: rgba(99, 102, 241, 0.16);
-      --accent-glow-2: rgba(236, 72, 153, 0.11);
-      --accent-glow-3: rgba(14, 165, 233, 0.11);
-      --glass-bg: rgba(255, 255, 255, 0.035);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --glass-hover-bg: rgba(255, 255, 255, 0.075);
-      --glass-hover-border: rgba(255, 255, 255, 0.22);
-    }
-
-    html, body {
-      height: 100%;
-      width: 100%;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text-main);
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      overflow: hidden;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      perspective: 1000px;
-    }
-
-    /* Ambient atmospheric glow orbs */
-    .ambient-mesh {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    .ambient-orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(130px);
-      opacity: 0.8;
-      animation: floatPulse 22s ease-in-out infinite alternate;
-      will-change: transform;
-    }
-
-    .orb-1 {
-      width: 580px;
-      height: 580px;
-      top: 15%;
-      left: 18%;
-      background: radial-gradient(circle, var(--accent-glow-1) 0%, transparent 70%);
-    }
-
-    .orb-2 {
-      width: 620px;
-      height: 620px;
-      bottom: 12%;
-      right: 15%;
-      background: radial-gradient(circle, var(--accent-glow-2) 0%, transparent 70%);
-      animation-delay: -7s;
-    }
-
-    .orb-3 {
-      width: 480px;
-      height: 480px;
-      top: 42%;
-      right: 32%;
-      background: radial-gradient(circle, var(--accent-glow-3) 0%, transparent 70%);
-      animation-delay: -14s;
-    }
-
-    @keyframes floatPulse {
-      0% {
-        transform: translate3d(0, 0, 0) scale(1);
-      }
-      50% {
-        transform: translate3d(35px, -25px, 0) scale(1.06);
-      }
-      100% {
-        transform: translate3d(-25px, 35px, 0) scale(0.96);
-      }
-    }
-
-    /* Subtle geometric grid backdrop overlay */
-    .bg-grid {
-      position: absolute;
-      inset: 0;
-      background-image: 
-        radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px);
-      background-size: 38px 38px;
-      mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
-      -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    /* Interactive Cursor Spotlight Aura */
-    .cursor-spotlight {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 650px;
-      height: 650px;
-      margin-top: -325px;
-      margin-left: -325px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(129, 140, 248, 0.09) 0%, rgba(236, 72, 153, 0.03) 45%, transparent 70%);
-      pointer-events: none;
-      z-index: 2;
-      opacity: 0;
-      transition: opacity 0.8s ease;
-      will-change: transform;
-    }
-
-    /* Center Stage Container */
-    main.center-stage {
-      position: relative;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 2.5rem;
-      user-select: none;
-    }
-
-    /* Acoustic Soundwave Pulse Rings Behind Title */
-    .acoustic-ring {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      border-radius: 9999px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      transform: translate(-50%, -50%) scale(0.85);
-      pointer-events: none;
-      opacity: 0;
-      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .ring-1 {
-      width: 115%;
-      height: 140%;
-    }
-
-    .ring-2 {
-      width: 130%;
-      height: 175%;
-      border-color: rgba(99, 102, 241, 0.12);
-    }
-
-    .center-stage:hover .acoustic-ring,
-    .center-stage.pulsing .acoustic-ring {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1.03);
-    }
-
-    .center-stage.pulsing .ring-1 {
-      animation: acousticPulse 1.4s ease-out;
-    }
-
-    .center-stage.pulsing .ring-2 {
-      animation: acousticPulse 1.4s ease-out 0.2s;
-    }
-
-    @keyframes acousticPulse {
-      0% {
-        transform: translate(-50%, -50%) scale(0.9);
-        opacity: 0.8;
-      }
-      50% {
-        opacity: 0.35;
-      }
-      100% {
-        transform: translate(-50%, -50%) scale(1.22);
-        opacity: 0;
-      }
-    }
-
-    /* Main Centerpiece Title */
-    .title-wrapper {
-      position: relative;
-      display: inline-block;
-      transform-style: preserve-3d;
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      cursor: pointer;
-    }
-
-    h1.brand-title {
-      font-size: clamp(2.8rem, 9.2vw, 7.6rem);
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      line-height: 1.05;
-      background: linear-gradient(
-        135deg, 
-        #ffffff 0%, 
-        #f8fafc 25%, 
-        #cbd5e1 50%, 
-        #ffffff 75%, 
-        #94a3b8 100%
-      );
-      background-size: 250% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 12px 35px rgba(0, 0, 0, 0.65));
-      position: relative;
-      animation: 
-        entranceReveal 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards,
-        smartShimmer 10s ease-in-out 1.3s infinite alternate;
-      transition: filter 0.4s ease, transform 0.3s ease;
-      will-change: transform, filter, background-position;
-    }
-
-    .title-wrapper:hover h1.brand-title {
-      filter: drop-shadow(0 0 50px rgba(255, 255, 255, 0.22)) drop-shadow(0 0 80px rgba(99, 102, 241, 0.2));
-    }
-
-    @keyframes entranceReveal {
-      0% {
-        opacity: 0;
-        filter: blur(12px) drop-shadow(0 0 0 rgba(0,0,0,0));
-        transform: translate3d(0, 24px, 0) scale(0.96);
-      }
-      100% {
-        opacity: 1;
-        filter: blur(0px) drop-shadow(0 12px 35px rgba(0, 0, 0, 0.65));
-        transform: translate3d(0, 0, 0) scale(1);
-      }
-    }
-
-    @keyframes smartShimmer {
-      0% {
-        background-position: 0% 50%;
-      }
-      100% {
-        background-position: 100% 50%;
-      }
-    }
-
-    /* Subtle bottom corner brand link */
-    .bottom-corner {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      z-index: 20;
-      animation: cornerFadeIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.4s backwards;
-    }
-
-    @keyframes cornerFadeIn {
-      0% {
-        opacity: 0;
-        transform: translate3d(0, 16px, 0);
-      }
-      100% {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-      }
-    }
-
-    .corner-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.65rem;
-      padding: 0.65rem 1.25rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      text-decoration: none;
-      color: var(--text-muted);
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: 9999px;
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-      position: relative;
-      overflow: hidden;
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    /* Dynamic glass sheen on link hover */
-    .corner-link::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -120%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        90deg, 
-        transparent, 
-        rgba(255, 255, 255, 0.12), 
-        transparent
-      );
-      transition: left 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .corner-link:hover::before {
-      left: 120%;
-    }
-
-    .corner-link:hover {
-      color: #ffffff;
-      background: var(--glass-hover-bg);
-      border-color: var(--glass-hover-border);
-      transform: translate3d(0, -2px, 0);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 24px rgba(99, 102, 241, 0.22);
-    }
-
-    .corner-link:active {
-      transform: translate3d(0, 0, 0);
-    }
-
-    /* Smart Pulsing Live Dot */
-    .live-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #10b981;
-      box-shadow: 0 0 8px #10b981;
-      animation: beaconPulse 2.5s ease-in-out infinite;
-      transition: background 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .corner-link:hover .live-dot {
-      background: #38bdf8;
-      box-shadow: 0 0 10px #38bdf8;
-    }
-
-    @keyframes beaconPulse {
-      0%, 100% {
-        opacity: 0.85;
-        transform: scale(1);
-      }
-      50% {
-        opacity: 0.35;
-        transform: scale(0.75);
-      }
-    }
-
-    /* Ambient Touch / Click Radial Wave */
-    .touch-wave {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      margin-top: -5px;
-      margin-left: -5px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      pointer-events: none;
-      z-index: 5;
-      animation: rippleExpand 1s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
-    }
-
-    @keyframes rippleExpand {
-      0% {
-        transform: scale(1);
-        opacity: 0.8;
-      }
-      100% {
-        transform: scale(38);
-        opacity: 0;
-      }
-    }
-
-    /* Reduced Motion Compatibility */
-    @media (prefers-reduced-motion: reduce) {
-      .ambient-orb,
-      h1.brand-title,
-      .corner-link,
-      .live-dot,
-      .title-wrapper {
-        animation: none !important;
-        transition: none !important;
-      }
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 640px) {
-      .bottom-corner {
-        bottom: 1.5rem;
-        right: 1.5rem;
-      }
-      .corner-link {
-        padding: 0.55rem 1rem;
-        font-size: 0.76rem;
-        letter-spacing: 0.16em;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Ambient Atmospheric Lighting -->
-  <div class="ambient-mesh" aria-hidden="true">
-    <div class="ambient-orb orb-1"></div>
-    <div class="ambient-orb orb-2"></div>
-    <div class="ambient-orb orb-3"></div>
+  <!-- Ambient Lighting Effects -->
+  <div class="ambient-container" aria-hidden="true">
+    <div class="ambient-orb orb-purple"></div>
+    <div class="ambient-orb orb-magenta"></div>
+  </div>
+  <div class="grid-mesh" aria-hidden="true"></div>
+
+  <!-- App Shell -->
+  <div class="app-layout">
+    
+    <!-- Left Navigation Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="https://mphathisi.com" target="_blank" rel="noopener noreferrer" class="brand-badge" title="M.P.A.S Ecosystem">
+          <div class="brand-icon-wrapper">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
+              <path d="M12 12 2.1 10.5"></path>
+              <path d="M12 12V22"></path>
+            </svg>
+          </div>
+          <div class="brand-title-group">
+            <span class="brand-name">Okotune (s)</span>
+            <span class="brand-subtitle">M.P.A.S SOVEREIGN AI</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="sidebar-actions">
+        <button class="btn-new-chat" id="btnNewChat">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>New Thread</span>
+        </button>
+
+        <div class="model-selector-bar">
+          <label for="modelSelect">Engine</label>
+          <select id="modelSelect" class="model-select">
+            <option value="qwen/qwen3.8-27b" selected>Qwen 3.8 27B (LPU Fast)</option>
+            <option value="openai/gpt-oss-120b">GPT-OSS 120B (Reasoning)</option>
+            <option value="openai/gpt-oss-20b">GPT-OSS 20B (Instant)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Threads History -->
+      <div class="sidebar-threads" id="threadsList">
+        <div class="threads-section-title">Conversations</div>
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Sidebar Bottom Controls -->
+      <div class="sidebar-footer">
+        <button class="footer-btn" id="btnOpenLore">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+          <span>Lore & Overfitting</span>
+        </button>
+
+        <button class="footer-btn" id="btnExportDataset">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span>Export Dataset (.jsonl)</span>
+        </button>
+
+        <div class="footer-status-row">
+          <span class="status-badge" id="r2StatusBadge">
+            <span class="status-indicator-dot"></span>
+            <span>R2: notak2</span>
+          </span>
+          <a href="https://mphathisi.com" target="_blank" rel="noopener noreferrer" style="color: var(--text-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700;">
+            M.P.A.S
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="workspace">
+      <!-- Top Navigation Header -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <button class="btn-mobile-toggle" id="btnMobileToggle" aria-label="Toggle Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <div class="active-thread-title" id="threadTitle">New Conversation</div>
+        </div>
+
+        <div class="top-bar-right">
+          <div class="badge-pill" id="activeModelBadge">Qwen 3.8 27B</div>
+          <button class="btn-icon-top" id="btnClearThread" title="Clear current thread">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <span>Clear</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Chat Messages Scroll Container -->
+      <div class="chat-scroll-area" id="chatScrollArea">
+        <div class="chat-container" id="chatContainer">
+          
+          <!-- Empty State / Welcome Hero -->
+          <div class="welcome-hero" id="welcomeHero">
+            <div class="hero-crest">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
+                <path d="M12 12 2.1 10.5"></path>
+                <path d="M12 12V22"></path>
+              </svg>
+            </div>
+            <h1 class="hero-title">Okotune (s)</h1>
+            <p class="hero-desc">
+              Sovereign intelligence for <strong>Mphathisi Ndlovu</strong>. Continuously learning your preferences, workflows, and projects to overfit perfectly to you.
+            </p>
+
+            <div class="prompt-suggestions-grid">
+              <div class="suggestion-card" data-prompt="Architect a high-performance backend microservice for the M.P.A.S ecosystem using modern PHP and zero-dependency endpoints.">
+                <div class="suggestion-tag">Architecture</div>
+                <div class="suggestion-text">Architect a high-performance PHP backend service</div>
+              </div>
+
+              <div class="suggestion-card" data-prompt="Audit the security protocols and threat mitigation model for SafeNet NUST.">
+                <div class="suggestion-tag">Cybersecurity</div>
+                <div class="suggestion-text">Audit security protocols for SafeNet NUST</div>
+              </div>
+
+              <div class="suggestion-card" data-prompt="Draft a fine-tuning roadmap and hyperparameter strategy for our private LoRA training dataset on Groq / R2.">
+                <div class="suggestion-tag">Overfitting Engine</div>
+                <div class="suggestion-text">Draft a fine-tuning & LoRA training roadmap</div>
+              </div>
+
+              <div class="suggestion-card" data-prompt="Review the Cloudflare R2 backup automation and public egress mappings for notak2.mphathisi.com.">
+                <div class="suggestion-tag">Cloud Infrastructure</div>
+                <div class="suggestion-text">Review R2 storage & public egress mappings</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Messages injected via app.js -->
+
+        </div>
+      </div>
+
+      <!-- Floating Input Bar -->
+      <div class="input-dock-container">
+        <div class="input-box-wrapper">
+          <textarea 
+            id="chatInput" 
+            class="chat-textarea" 
+            placeholder="Ask Okotune AI or give an instruction... (Shift + Enter for new line)"
+            rows="1"
+          ></textarea>
+          
+          <div class="input-controls-row">
+            <div class="input-hints-left">
+              <span>M.P.A.S Overfitting Active</span>
+              <span>•</span>
+              <span id="tokenCounter">Groq LPU 500+ t/s</span>
+            </div>
+
+            <button class="btn-send" id="btnSend" disabled aria-label="Send message">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="input-footer-note">
+          Private to Mphathisi Ndlovu • Data preserved in Sovereign LoRA Corpus • <a href="https://mphathisi.com" target="_blank" rel="noopener noreferrer" style="color: var(--text-muted); text-decoration: none;">mphathisi.com</a>
+        </div>
+      </div>
+    </main>
+
   </div>
 
-  <!-- Geometric Grid Backdrop -->
-  <div class="bg-grid" aria-hidden="true"></div>
-
-  <!-- Reactive Cursor Glow -->
-  <div class="cursor-spotlight" id="cursorSpotlight" aria-hidden="true"></div>
-
-  <!-- Center Stage -->
-  <main class="center-stage" id="centerStage">
-    <div class="acoustic-ring ring-1" aria-hidden="true"></div>
-    <div class="acoustic-ring ring-2" aria-hidden="true"></div>
-
-    <div class="title-wrapper" id="titleWrapper">
-      <h1 class="brand-title" id="brandTitle">Okotune (s)</h1>
+  <!-- Drawer: Lore & Overfitting Inspector -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="lore-drawer" id="loreDrawer">
+    <div class="drawer-header">
+      <div class="drawer-title">🧠 Lore & Memory Inspector</div>
+      <button class="btn-close-drawer" id="btnCloseDrawer" aria-label="Close drawer">✕</button>
     </div>
-  </main>
 
-  <!-- Bottom Corner Link -->
-  <aside class="bottom-corner">
-    <a href="https://mphathisi.com" target="_blank" rel="noopener noreferrer" class="corner-link" title="Visit mphathisi.com">
-      <span class="live-dot" aria-hidden="true"></span>
-      <span>M.P.A.S</span>
-    </a>
+    <div class="drawer-body">
+      <!-- Stats Card -->
+      <div class="stats-card">
+        <h4>Overfitting Metrics</h4>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-val" id="statInteractions">0</span>
+            <span class="stat-lbl">Interactions Logged</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-val" id="statGold">0</span>
+            <span class="stat-lbl">Gold Standard Pairs</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-val" id="statDatasetSize">0 KB</span>
+            <span class="stat-lbl">Dataset Corpus</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-val" style="color: var(--accent-emerald);">Active</span>
+            <span class="stat-lbl">R2 Auto-Sync</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Directives Section -->
+      <div class="lore-section">
+        <h4>Permanent Directives & Rules</h4>
+        <div id="directivesList">
+          <!-- Populated by JS -->
+        </div>
+
+        <form class="form-add-directive" id="formAddDirective">
+          <input 
+            type="text" 
+            class="input-directive-text" 
+            id="inputNewDirective" 
+            placeholder="Add new rule or preference (e.g. Always use PHP 8.2)..."
+            required
+          />
+          <button type="submit" class="btn-submit-dir">+ Teach Okotune</button>
+        </form>
+      </div>
+
+      <!-- Export Datasets -->
+      <div class="lore-section">
+        <h4>Export Fine-Tuning Corpus</h4>
+        <div style="display: flex; gap: 10px; margin-top: 8px;">
+          <a href="/api/export.php?format=jsonl" class="btn-submit-dir" style="text-decoration: none; text-align: center; flex: 1;">
+            Download .jsonl (LoRA)
+          </a>
+          <a href="/api/export.php?format=json" class="btn-submit-dir" style="text-decoration: none; text-align: center; flex: 1; background: var(--bg-glass);">
+            Download .json
+          </a>
+        </div>
+      </div>
+    </div>
   </aside>
 
-  <script>
-    (function () {
-      const spotlight = document.getElementById('cursorSpotlight');
-      const titleWrapper = document.getElementById('titleWrapper');
-      const centerStage = document.getElementById('centerStage');
+  <!-- Auth Modal -->
+  <div class="auth-modal-overlay" id="authModalOverlay" style="display: none;">
+    <div class="auth-modal">
+      <div class="auth-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
+      <h2 class="auth-title">Okotune Sovereign Access</h2>
+      <p class="auth-desc">Enter your M.P.A.S master passkey to unlock your private AI workspace.</p>
 
-      let mouseX = window.innerWidth / 2;
-      let mouseY = window.innerHeight / 2;
-      let curX = mouseX;
-      let curY = mouseY;
-      let isMouseMoving = false;
+      <form class="auth-form" id="authForm">
+        <input 
+          type="password" 
+          id="authPasswordInput" 
+          class="auth-input" 
+          placeholder="Enter Passkey..." 
+          required 
+          autocomplete="current-password"
+        />
+        <button type="submit" class="auth-submit-btn">Unlock Workspace</button>
+        <div class="auth-error-msg" id="authErrorMsg">Invalid passkey. Try again.</div>
+      </form>
+    </div>
+  </div>
 
-      // Mouse tracking for subtle spotlight and 3D parallax
-      window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        if (!isMouseMoving) {
-          isMouseMoving = true;
-          if (spotlight) spotlight.style.opacity = '1';
-        }
-      });
-
-      window.addEventListener('mouseleave', () => {
-        if (spotlight) spotlight.style.opacity = '0';
-        if (titleWrapper) titleWrapper.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
-      });
-
-      // Smooth RAF damping loop for organic physics
-      function animate() {
-        curX += (mouseX - curX) * 0.08;
-        curY += (mouseY - curY) * 0.08;
-
-        if (spotlight) {
-          spotlight.style.transform = `translate3d(${curX}px, ${curY}px, 0)`;
-        }
-
-        // Very subtle, smart 3D tilt on center title
-        if (titleWrapper && isMouseMoving) {
-          const rect = titleWrapper.getBoundingClientRect();
-          const centerX = rect.left + rect.width / 2;
-          const centerY = rect.top + rect.height / 2;
-          const deltaX = (curX - centerX) / (window.innerWidth / 2);
-          const deltaY = (curY - centerY) / (window.innerHeight / 2);
-
-          // Restrict to max ±4.5 degrees for understated elegance
-          const rotateY = deltaX * 4.5;
-          const rotateX = -deltaY * 4.5;
-
-          titleWrapper.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
-        }
-
-        requestAnimationFrame(animate);
-      }
-      requestAnimationFrame(animate);
-
-      // Acoustic pulse trigger on title click or tap
-      function triggerPulse(e) {
-        if (!centerStage) return;
-        centerStage.classList.remove('pulsing');
-        void centerStage.offsetWidth; // Trigger reflow
-        centerStage.classList.add('pulsing');
-
-        // Create ripple at click position
-        const ripple = document.createElement('div');
-        ripple.className = 'touch-wave';
-        const x = e.clientX || window.innerWidth / 2;
-        const y = e.clientY || window.innerHeight / 2;
-        ripple.style.left = x + 'px';
-        ripple.style.top = y + 'px';
-        document.body.appendChild(ripple);
-
-        setTimeout(() => {
-          if (ripple.parentNode) ripple.parentNode.removeChild(ripple);
-        }, 1100);
-      }
-
-      if (titleWrapper) {
-        titleWrapper.addEventListener('click', triggerPulse);
-      }
-      window.addEventListener('click', (e) => {
-        if (e.target.closest('a')) return;
-        triggerPulse(e);
-      });
-    })();
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>

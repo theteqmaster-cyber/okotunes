@@ -1,9 +1,21 @@
-FROM nginx:alpine
+FROM php:8.3-alpine
 
-# Copy static single-page app
-COPY index.html /usr/share/nginx/html/index.html
+# Install curl and openssl extensions for fast API communication
+RUN apk add --no-cache curl-dev \
+    && docker-php-ext-install curl
 
-# Expose standard web port for Render
+# Working directory
+WORKDIR /var/www/html
+
+# Copy application source
+COPY . /var/www/html/
+
+# Ensure data directory has write permissions for session lore and datasets
+RUN mkdir -p /var/www/html/data/chats \
+    && chmod -R 777 /var/www/html/data
+
+# Expose port 80 for Render Web Service
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+# Start high-performance PHP built-in server with router
+CMD ["php", "-S", "0.0.0.0:80", "router.php"]
