@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     loginErrorMsg.classList.add('hidden');
     btnLoginSubmit.disabled = true;
-    btnLoginSubmit.textContent = 'Authenticating...';
+    btnLoginSubmit.textContent = 'Logging in...';
 
     const email = authEmailInput.value.trim();
     const password = authPasswordInput.value.trim();
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.success) {
         showApp();
       } else {
-        loginErrorMsg.textContent = data.error || 'Access denied. Invalid credentials.';
+        loginErrorMsg.textContent = data.error || 'Incorrect password. Please try again.';
         loginErrorMsg.classList.remove('hidden');
       }
     } catch (err) {
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
       loginErrorMsg.classList.remove('hidden');
     } finally {
       btnLoginSubmit.disabled = false;
-      btnLoginSubmit.textContent = 'Access Private Studio';
+      btnLoginSubmit.textContent = 'Log in';
     }
   });
 

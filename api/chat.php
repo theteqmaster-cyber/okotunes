@@ -63,24 +63,24 @@ $history = file_exists($threadFile) ? (json_decode(file_get_contents($threadFile
 
 // 3. Build System Prompt with Lore
 $lore = file_exists(LORE_FILE) ? (json_decode(file_get_contents(LORE_FILE), true) ?? []) : [];
-$constitution = $lore['system_constitution'] ?? 'You are Okotune AI, sovereign assistant for Mphathisi Ndlovu and the M.P.A.S ecosystem.';
+$constitution = $lore['system_constitution'] ?? "You are Okotune, Mphathisi's private personal AI assistant. You are a sharp, friendly, and practical developer buddy.";
 
 $directivesText = "";
 if (!empty($lore['directives'])) {
-    $directivesText .= "\nACTIVE DIRECTIVES & LORE:\n";
+    $directivesText .= "\nPreferences & Rules:\n";
     foreach ($lore['directives'] as $d) {
-        $directivesText .= "- [{$d['category']}]: {$d['rule']}\n";
+        $directivesText .= "- {$d['rule']}\n";
     }
 }
 
 if (!empty($lore['ecosystem_assets'])) {
-    $directivesText .= "\nECOSYSTEM ENTITIES:\n";
+    $directivesText .= "\nMphathisi's Projects:\n";
     foreach ($lore['ecosystem_assets'] as $a) {
         $directivesText .= "- {$a['name']} ({$a['domain']}): {$a['role']}\n";
     }
 }
 
-$systemPrompt = "{$constitution}\n{$directivesText}\n\nCurrent local timestamp: " . date('Y-m-d H:i:s') . "\nTarget User: Mphathisi Ndlovu (The Teq-master).";
+$systemPrompt = "{$constitution}\n{$directivesText}\n\nCurrent timestamp: " . date('Y-m-d H:i:s') . "\nUser: Mphathisi Ndlovu.";
 
 // 4. Build messages payload
 $messages = [

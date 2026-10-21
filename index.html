@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Okotune (s) — Sovereign AI Studio</title>
-  <meta name="description" content="Private Sovereign AI Studio for Mphathisi Ndlovu and the M.P.A.S Ecosystem. Powered by Groq LPU with Multimodal Vision.">
+  <title>Okotune (s) — Personal AI</title>
+  <meta name="description" content="Personal AI assistant for Mphathisi Ndlovu. Fast chat, code generation, and image analysis powered by Groq.">
 
   <!-- Tailwind CSS 3.4 CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -84,12 +84,12 @@
   </div>
 
   <!-- =========================================================================
-       1. Dedicated Hard-Gated Login Screen
+       1. Dedicated Login Screen (Clean & Personal)
        ========================================================================= -->
   <section id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-950/95 backdrop-blur-3xl">
-    <div class="w-full max-w-md p-8 md:p-10 rounded-3xl bg-dark-900/90 border border-slate-700/60 shadow-2xl shadow-indigo-950/50 backdrop-blur-2xl text-center relative z-10 transition-all">
+    <div class="w-full max-w-md p-8 md:p-10 rounded-3xl bg-dark-900/90 border border-slate-700/60 shadow-2xl shadow-indigo-950/50 backdrop-blur-2xl text-center relative z-10">
       
-      <!-- Brand Crest -->
+      <!-- Logo Crest -->
       <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 p-0.5 shadow-lg shadow-indigo-500/30 flex items-center justify-center">
         <div class="w-full h-full bg-dark-900 rounded-[14px] flex items-center justify-center">
           <svg class="w-8 h-8 text-indigo-400" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -104,70 +104,66 @@
         Okotune (s)
       </h1>
       
-      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-mono text-xs uppercase tracking-widest mb-8">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-mono text-xs mb-8">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>M.P.A.S Sovereign AI</span>
+        <span>Personal AI for Mphathisi</span>
       </div>
 
-      <form id="loginForm" class="space-y-5 text-left">
+      <form id="loginForm" class="space-y-4 text-left">
         <div>
-          <label for="authEmailInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-            Ecosystem Email
+          <label for="authEmailInput" class="block text-xs font-semibold text-slate-400 mb-1.5">
+            Email
           </label>
-          <div class="relative">
-            <input 
-              type="email" 
-              id="authEmailInput" 
-              class="w-full px-4 py-3 rounded-xl bg-dark-850/80 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm transition-all"
-              placeholder="admin@okotunes.com"
-              value="admin@okotunes.com"
-              required 
-              autocomplete="username"
-            />
-          </div>
+          <input 
+            type="email" 
+            id="authEmailInput" 
+            class="w-full px-4 py-3 rounded-xl bg-dark-850/80 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm transition-all"
+            placeholder="admin@okotunes.com"
+            value="admin@okotunes.com"
+            required 
+            autocomplete="username"
+          />
         </div>
 
         <div>
-          <label for="authPasswordInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-            Master Passkey
+          <label for="authPasswordInput" class="block text-xs font-semibold text-slate-400 mb-1.5">
+            Password
           </label>
-          <div class="relative">
-            <input 
-              type="password" 
-              id="authPasswordInput" 
-              class="w-full px-4 py-3 rounded-xl bg-dark-850/80 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm transition-all"
-              placeholder="Enter master passkey..."
-              required 
-              autocomplete="current-password"
-            />
-          </div>
+          <input 
+            type="password" 
+            id="authPasswordInput" 
+            class="w-full px-4 py-3 rounded-xl bg-dark-850/80 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm transition-all"
+            placeholder="Enter password..."
+            required 
+            autocomplete="current-password"
+          />
         </div>
 
         <button 
           type="submit" 
           id="btnLoginSubmit"
-          class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-95 text-white font-semibold text-sm tracking-wide shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] cursor-pointer mt-2"
+          class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-95 text-white font-semibold text-sm shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] cursor-pointer mt-2"
         >
-          Access Private Studio
+          Log in
         </button>
 
         <div id="loginErrorMsg" class="hidden p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs text-center font-medium">
-          Access denied. Invalid credentials for M.P.A.S ecosystem.
+          Incorrect password. Please try again.
         </div>
       </form>
 
       <div class="mt-8 pt-6 border-t border-slate-800/80 text-xs text-slate-500 font-mono">
-        Private to <a href="https://mphathisi.com" target="_blank" class="text-slate-400 hover:text-white transition">mphathisi.com</a>
+        <a href="https://mphathisi.com" target="_blank" class="text-slate-400 hover:text-white transition">mphathisi.com</a>
       </div>
     </div>
   </section>
 
   <!-- =========================================================================
-       2. Main Sovereign AI Workspace (Revealed Once Authenticated)
+       2. Main Chat Workspace
        ========================================================================= -->
   <div id="appLayout" class="hidden relative z-10 w-full h-full flex overflow-hidden">
 
-    <!-- Left Navigation Sidebar -->
+    <!-- Left Sidebar -->
     <aside id="sidebar" class="w-72 bg-dark-900 border-r border-slate-800/80 flex flex-col z-30 transition-transform duration-300 max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:-translate-x-full">
       
       <!-- Brand Header -->
@@ -184,20 +180,20 @@
           </div>
           <div>
             <div class="font-extrabold text-sm tracking-tight text-white">Okotune (s)</div>
-            <div class="font-mono text-[10px] font-bold text-cyan-400 uppercase tracking-wider">M.P.A.S SOVEREIGN</div>
+            <div class="font-mono text-[10px] font-bold text-slate-400">PERSONAL AI</div>
           </div>
         </a>
       </div>
 
-      <!-- Sidebar Actions & Model Selection -->
+      <!-- Start Chat Button & Model Selector -->
       <div class="p-3 space-y-2">
         <button id="btnNewChat" class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-500/20 via-purple-500/15 to-pink-500/20 border border-indigo-500/30 hover:border-indigo-500/60 text-white font-semibold text-xs tracking-wide shadow-sm transition hover:scale-[1.01] active:scale-[0.99] cursor-pointer">
           <svg class="w-4 h-4 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-          <span>New Chat</span>
+          <span>Start a chat</span>
         </button>
 
         <div class="flex items-center gap-2 p-2 rounded-lg bg-dark-850 border border-slate-800 text-xs">
-          <label for="modelSelect" class="text-slate-400 uppercase font-mono text-[10px] font-bold tracking-wider">Engine</label>
+          <label for="modelSelect" class="text-slate-400 font-mono text-[10px] font-bold">Model</label>
           <select id="modelSelect" class="bg-transparent text-white font-medium outline-none cursor-pointer flex-1 text-xs">
             <option value="qwen/qwen3.8-27b" selected>Qwen 3.8 27B (Fast + Vision)</option>
             <option value="openai/gpt-oss-120b">GPT-OSS 120B (Reasoning)</option>
@@ -206,27 +202,27 @@
         </div>
       </div>
 
-      <!-- Threads History -->
+      <!-- Recent Conversations -->
       <div id="threadsList" class="flex-1 overflow-y-auto px-2 py-1 space-y-1">
-        <div class="px-3 py-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">Conversations</div>
+        <div class="px-3 py-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">Recent chats</div>
       </div>
 
       <!-- Sidebar Footer -->
       <div class="p-3 border-t border-slate-800/80 space-y-1.5 bg-dark-950/60">
         <button id="btnOpenLore" class="w-full flex items-center gap-2.5 py-2 px-3 rounded-lg hover:bg-slate-800/60 text-slate-300 text-xs font-medium transition cursor-pointer">
           <svg class="w-4 h-4 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-          <span>Directives & Lore</span>
+          <span>Preferences & Notes</span>
         </button>
 
         <button id="btnSignOut" class="w-full flex items-center gap-2.5 py-2 px-3 rounded-lg hover:bg-rose-500/10 text-slate-400 hover:text-rose-400 text-xs font-medium transition cursor-pointer">
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-          <span>Sign Out</span>
+          <span>Log out</span>
         </button>
 
         <div class="pt-2 flex items-center justify-between px-1 text-[11px] font-mono text-slate-500">
           <span class="inline-flex items-center gap-1.5">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400"></span>
-            <span>R2: notak2</span>
+            <span>R2 Connected</span>
           </span>
           <a href="https://mphathisi.com" target="_blank" class="hover:text-white transition font-bold">M.P.A.S</a>
         </div>
@@ -250,7 +246,7 @@
             Qwen 3.8 27B Vision
           </div>
 
-          <button id="btnClearThread" class="inline-flex items-center gap-1.5 py-1 px-3 rounded-lg bg-dark-850 hover:bg-slate-800 border border-slate-700 text-slate-400 hover:text-white text-xs font-medium transition cursor-pointer" title="Clear messages">
+          <button id="btnClearThread" class="inline-flex items-center gap-1.5 py-1 px-3 rounded-lg bg-dark-850 hover:bg-slate-800 border border-slate-700 text-slate-400 hover:text-white text-xs font-medium transition cursor-pointer" title="Clear chat">
             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
             <span>Clear</span>
           </button>
@@ -261,9 +257,9 @@
       <div id="chatScrollArea" class="flex-1 overflow-y-auto px-4 md:px-8 py-6 pb-36 flex flex-col items-center">
         <div id="chatContainer" class="w-full max-w-3xl space-y-6">
 
-          <!-- Welcome Empty State -->
+          <!-- Welcome State: Casual & Personal -->
           <div id="welcomeHero" class="flex flex-col items-center justify-center text-center py-12 md:py-16 my-auto max-w-xl">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 p-0.5 shadow-xl shadow-indigo-500/30 mb-6 flex items-center justify-center animate-pulse">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 p-0.5 shadow-xl shadow-indigo-500/30 mb-5 flex items-center justify-center">
               <div class="w-full h-full bg-dark-900 rounded-[14px] flex items-center justify-center">
                 <svg class="w-8 h-8 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                   <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
@@ -273,32 +269,32 @@
               </div>
             </div>
 
-            <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent mb-3">
-              Okotune (s)
+            <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-2">
+              Hey Mphathisi
             </h2>
             <p class="text-slate-400 text-sm md:text-base leading-relaxed mb-8">
-              Private sovereign intelligence for <strong>Mphathisi Ndlovu</strong>. Powered by Groq LPU with multimodal vision processing.
+              What are we building today? Ask a question, write code, or drop in a screenshot.
             </p>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full text-left">
-              <div class="suggestion-card p-4 rounded-xl bg-dark-850/80 border border-slate-800 hover:border-indigo-500/40 hover:bg-slate-800/40 transition cursor-pointer" data-prompt="Architect a clean, scalable PHP backend service with zero framework overhead.">
-                <div class="text-[10px] font-bold text-cyan-400 uppercase font-mono mb-1">Architecture</div>
-                <div class="text-xs font-semibold text-slate-200">Architect a clean, scalable PHP backend service</div>
+              <div class="suggestion-card p-4 rounded-xl bg-dark-850/80 border border-slate-800 hover:border-indigo-500/40 hover:bg-slate-800/40 transition cursor-pointer" data-prompt="Write a clean, lightweight PHP service with minimal dependencies.">
+                <div class="text-[10px] font-bold text-cyan-400 uppercase font-mono mb-1">Code</div>
+                <div class="text-xs font-semibold text-slate-200">Write a clean, lightweight PHP service</div>
               </div>
 
-              <div class="suggestion-card p-4 rounded-xl bg-dark-850/80 border border-slate-800 hover:border-indigo-500/40 hover:bg-slate-800/40 transition cursor-pointer" data-prompt="Review and optimize security protocols for the SafeNet NUST project.">
-                <div class="text-[10px] font-bold text-cyan-400 uppercase font-mono mb-1">Cybersecurity</div>
-                <div class="text-xs font-semibold text-slate-200">Review security protocols for SafeNet NUST</div>
+              <div class="suggestion-card p-4 rounded-xl bg-dark-850/80 border border-slate-800 hover:border-indigo-500/40 hover:bg-slate-800/40 transition cursor-pointer" data-prompt="Help me review and improve security for SafeNet NUST.">
+                <div class="text-[10px] font-bold text-cyan-400 uppercase font-mono mb-1">Projects</div>
+                <div class="text-xs font-semibold text-slate-200">Review security for SafeNet NUST</div>
               </div>
 
-              <div class="suggestion-card p-4 rounded-xl bg-dark-850/80 border border-slate-800 hover:border-indigo-500/40 hover:bg-slate-800/40 transition cursor-pointer" data-prompt="Analyze this screenshot and explain the architecture or fix the code in it.">
-                <div class="text-[10px] font-bold text-pink-400 uppercase font-mono mb-1">Multimodal Vision</div>
-                <div class="text-xs font-semibold text-slate-200">Inspect & explain an attached code screenshot</div>
+              <div class="suggestion-card p-4 rounded-xl bg-dark-850/80 border border-slate-800 hover:border-indigo-500/40 hover:bg-slate-800/40 transition cursor-pointer" data-prompt="Analyze this screenshot and explain the code or UI in it.">
+                <div class="text-[10px] font-bold text-pink-400 uppercase font-mono mb-1">Vision</div>
+                <div class="text-xs font-semibold text-slate-200">Inspect & explain an attached screenshot</div>
               </div>
 
-              <div class="suggestion-card p-4 rounded-xl bg-dark-850/80 border border-slate-800 hover:border-indigo-500/40 hover:bg-slate-800/40 transition cursor-pointer" data-prompt="Review Cloudflare R2 backup automation and public egress mappings for notak2.mphathisi.com.">
-                <div class="text-[10px] font-bold text-indigo-400 uppercase font-mono mb-1">Cloud Infrastructure</div>
-                <div class="text-xs font-semibold text-slate-200">Review R2 storage & public egress mappings</div>
+              <div class="suggestion-card p-4 rounded-xl bg-dark-850/80 border border-slate-800 hover:border-indigo-500/40 hover:bg-slate-800/40 transition cursor-pointer" data-prompt="Help me plan the next feature for my ecosystem.">
+                <div class="text-[10px] font-bold text-indigo-400 uppercase font-mono mb-1">Planning</div>
+                <div class="text-xs font-semibold text-slate-200">Plan the next feature for my projects</div>
               </div>
             </div>
           </div>
@@ -322,7 +318,7 @@
               </div>
               <div class="flex-1 min-w-0">
                 <div id="imagePreviewFilename" class="text-xs font-semibold text-white truncate">image.png</div>
-                <div class="text-[10px] font-mono text-cyan-400 font-bold uppercase">Multimodal Vision Active</div>
+                <div class="text-[10px] font-mono text-cyan-400 font-bold">Image attached</div>
               </div>
             </div>
 
@@ -330,15 +326,14 @@
               id="chatInput" 
               rows="1" 
               class="w-full bg-transparent text-white text-sm placeholder-slate-500 outline-none resize-none min-h-[44px] max-h-48 py-1 px-1"
-              placeholder="Ask Okotune AI or paste/attach an image... (Shift + Enter for new line)"
+              placeholder="Message Okotune or attach an image... (Shift + Enter for new line)"
             ></textarea>
 
             <div class="flex items-center justify-between pt-2 border-t border-slate-800/80 mt-1">
               <div class="flex items-center gap-2">
-                <!-- Hidden Image Input -->
                 <input type="file" id="imageFileInput" accept="image/*" class="hidden">
                 
-                <button id="btnAttachImage" class="p-2 rounded-xl bg-dark-850 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition cursor-pointer" title="Attach Image for Vision Processing">
+                <button id="btnAttachImage" class="p-2 rounded-xl bg-dark-850 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition cursor-pointer" title="Attach image">
                   <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
                   </svg>
@@ -359,7 +354,7 @@
           </div>
 
           <div class="text-center text-[11px] text-slate-500 mt-2 font-mono">
-            Private to Mphathisi Ndlovu • <a href="https://mphathisi.com" target="_blank" class="hover:text-slate-400 transition">mphathisi.com</a>
+            Okotune • <a href="https://mphathisi.com" target="_blank" class="hover:text-slate-400 transition">mphathisi.com</a>
           </div>
         </div>
       </div>
@@ -369,21 +364,21 @@
   </div>
 
   <!-- =========================================================================
-       3. Ecosystem Directives Drawer
+       3. Preferences & Notes Drawer
        ========================================================================= -->
   <div id="drawerOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden transition-opacity"></div>
   <aside id="loreDrawer" class="fixed top-0 right-0 w-full max-w-md h-full bg-dark-900 border-l border-slate-800 shadow-2xl z-50 translate-x-full transition-transform duration-300 flex flex-col">
     <div class="p-5 border-b border-slate-800 flex items-center justify-between">
       <div class="font-bold text-sm text-white flex items-center gap-2">
         <span>🧠</span>
-        <span>Ecosystem Directives & Lore</span>
+        <span>Preferences & Notes</span>
       </div>
       <button id="btnCloseDrawer" class="p-1 rounded-lg text-slate-400 hover:text-white transition">✕</button>
     </div>
 
     <div class="p-5 flex-1 overflow-y-auto space-y-5">
       <div>
-        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 font-mono">Permanent Directives</h4>
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 font-mono">Saved Rules & Notes</h4>
         <div id="directivesList" class="space-y-2"></div>
       </div>
 
@@ -392,17 +387,17 @@
           type="text" 
           id="inputNewDirective" 
           class="w-full px-3.5 py-2.5 rounded-xl bg-dark-850 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
-          placeholder="Add new rule (e.g. Always use PHP 8.3)..."
+          placeholder="Add a rule or note (e.g. Always write clean PHP)..."
           required 
         />
         <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition cursor-pointer">
-          + Save Directive
+          + Save Note
         </button>
       </form>
     </div>
   </aside>
 
-  <!-- Cache-Busted Frontend Controller -->
-  <script src="app.js?v=3.5.0"></script>
+  <!-- Cache-Busted Controller -->
+  <script src="app.js?v=4.0.0"></script>
 </body>
 </html>
